@@ -29,7 +29,14 @@
   },
   "license": "MIT",
   "dependencies": {
+    "asset-pipe-js-writer": "1.0.0-alpha.2",
     "commander": "2.9.0",
     "JSONStream": "1.1.1"
+  },
+  "devDependencies": {
+    "tap": "8.0.1"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
   }
 }
