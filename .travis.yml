@@ -6,4 +6,9 @@ node_js:
 
 script:
   - npm test
-  
+  - npm run lint
+
+cache:
+  npm: true
+  directories:
+  - node_modules # NPM packages
