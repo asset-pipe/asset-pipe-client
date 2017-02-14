@@ -5,6 +5,10 @@
     "name": "Trygve Lie",
     "email": "post@trygve-lie.com"
   },
+  "files": [
+    "bin",
+    "lib"
+  ],
   "description": "Asset pipe client",
   "main": "./lib/main.js",
   "bin": "./bin/cli.js",
