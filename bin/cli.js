@@ -1,11 +1,9 @@
 #!/usr/bin/env node
+'use strict';
 
-
-var program     = require('commander'),
-    writer      = require('./writer.js'),
-    pckage      = require('../package.json');
-
-
+const program = require('commander');
+const writer = require('./writer.js');
+const pckage = require('../package.json');
 
 program
     .version(pckage.version);
@@ -19,24 +17,20 @@ program
 program
     .command('write')
     .description('write an asset feed')
-    .option("-s, --source <source>", "source file to read")
-    .option("-d, --destination <destination>", "destination to write too")
+    .option('-s, --source <source>', 'source file to read')
+    .option('-d, --destination <destination>', 'destination to write too')
     .action(writer.js)
     .on('--help', writer.help);
 
 
-
 program.on('--help', () => {
-    console.log('  Helpe here:');
+    console.log('  Help here:');
 });
-
 
 
 if (!process.argv.slice(2).length) {
     program.outputHelp();
     return;
 }
-
-
 
 program.parse(process.argv);
