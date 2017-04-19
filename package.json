@@ -43,7 +43,7 @@
     "eslint-config-finn": "^1.0.1"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint lib test",
     "test": "tap test/*.js"
   }
 }
