@@ -4,7 +4,7 @@ const Client = require('../');
 
 const bundle = new Client({
     files: './assets/es5/module.a.js',  // wasted!!!!!!
-    buildServerUri: 'http://127.0.0.1:7100',
+    buildServerUri: 'http://127.0.0.1:3031',
 });
 
 
