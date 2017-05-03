@@ -34,11 +34,10 @@ Read an [CommonJS module][commonjs] entry point and upload it as an asset-feed t
 const Client = require('asset-pipe-client');
 
 const client = new Client({
-    files: ['path/to/myFrontendCode.js']
     buildServerUri: 'http://127.0.0.1:7100',
 });
 
-client.uploadFeed()
+client.uploadFeed(['path/to/myFrontendCode.js'])
     .then((content) => {
         // content contains filename of created the asset-feed
         console.log(content);
@@ -86,8 +85,7 @@ This module have the following API:
 
 Supported arguments are:
 
- * `files` - Same as `files` in the [Browserify constructor][browserify-opts]
- * `buildServerUri` - URI to the [asset-pipe-build-server][asset-pipe-build-server]
+ * `options.buildServerUri` - URI to the [asset-pipe-build-server][asset-pipe-build-server]
 
 ### transform()
 
@@ -97,10 +95,11 @@ Same as the [Browserify transform][browserify-transform] method.
 
 Same as the [Browserify plugin][browserify-plugin] method.
 
-### uploadFeed()
+### uploadFeed(files)
 
-Read the [CommonJS module][commonjs] entry point given at `options.files` in the constructor and uploads
-it as an asset feeds to the [asset-pipe-build-server][asset-pipe-build-server].
+Read the [CommonJS module][commonjs] entry point and uploads it as an asset feeds to the [asset-pipe-build-server][asset-pipe-build-server].
+
+ * `files` - Array - List of CommonJS module entry points - Same as `files` in the [Browserify constructor][browserify-opts]
 
 Returns a promise.
 

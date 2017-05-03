@@ -3,7 +3,6 @@
 const Client = require('../');
 
 const bundle = new Client({
-    files: './assets/es5/module.a.js',  // wasted!!!!!!
     buildServerUri: 'http://127.0.0.1:7100',
 });
 
@@ -15,10 +14,3 @@ bundle.createRemoteBundle([
 ])
     .then(content => console.log(content))
     .catch(console.error);
-
-
-/*
-bundle.createRemoteBundle([])
-    .then(content => console.log(content))
-    .catch(console.error);
-*/
