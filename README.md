@@ -1,5 +1,7 @@
 # asset-pipe-client
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/asset-pipe/asset-pipe-client.svg)](https://greenkeeper.io/)
+
 A client for read an [CommonJS module][commonjs] entry point and uploading it as an asset feeds to- and
 triggering builds of executable asset bundles in the [asset-pipe-build-server][asset-pipe-build-server].
 
