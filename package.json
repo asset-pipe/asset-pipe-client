@@ -38,7 +38,7 @@
   "devDependencies": {
     "asset-pipe-test-es5a": "^1.0.0",
     "asset-pipe-test-es5b": "^1.0.0",
-    "tap": "10.3.2",
+    "tap": "10.3.4",
     "eslint": "^3.15.0",
     "eslint-config-finn": "^1.0.1"
   },
