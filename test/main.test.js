@@ -1,20 +1,18 @@
 'use strict';
 
-let Client;
-let express;
-let Writer;
-let pluginMock;
-let transformMock;
+const express = require('express');
 
-function mockWriter () {
+let mockWriter;
+let mockPlugin;
+let mockTransform;
+
+jest.mock('asset-pipe-js-writer', () => {
     const { Readable } = require('stream');
-    jest.doMock('asset-pipe-js-writer');
-    Writer = require('asset-pipe-js-writer');
-    pluginMock = jest.fn();
-    transformMock = jest.fn();
-    Writer.mockImplementation(() => ({
-        plugin: pluginMock,
-        transform: transformMock,
+    mockPlugin = jest.fn();
+    mockTransform = jest.fn();
+    mockWriter = jest.fn(() => ({
+        plugin: mockPlugin,
+        transform: mockTransform,
         bundle: () => {
             const items = [{}, {}, {}, {}];
             return new Readable({
@@ -28,7 +26,10 @@ function mockWriter () {
             });
         },
     }));
-}
+    return mockWriter;
+});
+
+const Client = require('../');
 
 function createTestServer (handlers) {
     const server = express();
@@ -41,13 +42,6 @@ function createTestServer (handlers) {
         });
     });
 }
-
-beforeEach(() => {
-    jest.resetModules();
-    mockWriter();
-    Client = require('../');
-    express = require('express');
-});
 
 test('new Client(options)', () => {
     expect.assertions(3);
@@ -129,7 +123,7 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
 
     const result = await client.uploadFeed(fakeFiles, fakeOptions);
 
-    expect(transformMock.mock.calls[0]).toEqual([fakeTransform, fakeTransformOptions]);
+    expect(mockTransform.mock.calls[0]).toEqual([fakeTransform, fakeTransformOptions]);
 });
 
 test('uploadFeed(files, options) - js - uses plugins', async () => {
@@ -151,7 +145,7 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
 
     const result = await client.uploadFeed(fakeFiles, fakeOptions);
 
-    expect(pluginMock.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
+    expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
 });
 
 test.skip('uploadFeed(files) - request error', async () => {
