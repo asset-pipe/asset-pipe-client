@@ -36,14 +36,17 @@ function createTestServer (handlers) {
     }
     return new Promise(resolve => {
         const serve = server.listen(() => {
-            resolve(serve.address().port);
+            resolve({
+                server: serve,
+                port: serve.address().port,
+            });
         });
     });
 }
 
 test('uploadFeed(files, options) - js', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/feed',
@@ -57,11 +60,12 @@ test('uploadFeed(files, options) - js', async () => {
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
     await expect(result).resolves.toBe('Success!');
+    server.close();
 });
 
 test('uploadFeed(files, options) - js - uses transforms', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/feed',
@@ -79,11 +83,12 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
     const result = await client.uploadFeed(fakeFiles, fakeOptions);
 
     expect(mockTransform.mock.calls[0]).toEqual([fakeTransform, fakeTransformOptions]);
+    server.close();
 });
 
 test('uploadFeed(files, options) - js - uses plugins', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/feed',
@@ -101,11 +106,12 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
     const result = await client.uploadFeed(fakeFiles, fakeOptions);
 
     expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
+    server.close();
 });
 
 test('uploadFeed(files) - 200', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/feed',
@@ -119,11 +125,12 @@ test('uploadFeed(files) - 200', async () => {
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
     await expect(result).resolves.toBe('Bad request!');
+    server.close();
 });
 
 test('uploadFeed(files) - 400', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/feed',
@@ -137,11 +144,12 @@ test('uploadFeed(files) - 400', async () => {
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
     await expect(result).rejects.toEqual(new Error('Bad request!'));
+    server.close();
 });
 
 test('uploadFeed(files) - other status codes', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/feed',
@@ -155,13 +163,14 @@ test('uploadFeed(files) - other status codes', async () => {
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
     await expect(result).rejects.toEqual(new Error('Asset build server responded with unknown error. Http status 300'));
+    server.close();
 });
 
 test('uploadFeed(files) - css');
 
 test('createRemoteBundle(sources) - 200', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/bundle',
@@ -174,11 +183,12 @@ test('createRemoteBundle(sources) - 200', async () => {
     const result = client.createRemoteBundle(fakeSources);
 
     await expect(result).resolves.toBe('success!');
+    server.close();
 });
 
 test('createRemoteBundle(sources) - 202', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/bundle',
@@ -191,11 +201,12 @@ test('createRemoteBundle(sources) - 202', async () => {
     const result = client.createRemoteBundle(fakeSources);
 
     await expect(result).resolves.toBe('success 202');
+    server.close();
 });
 
 test('createRemoteBundle(sources) - 400', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/bundle',
@@ -208,11 +219,12 @@ test('createRemoteBundle(sources) - 400', async () => {
     const result = client.createRemoteBundle(fakeSources);
 
     await expect(result).rejects.toEqual(new Error('Bad request'));
+    server.close();
 });
 
 test('createRemoteBundle(sources) - other status codes', async () => {
     expect.assertions(1);
-    const port = await createTestServer([
+    const { server, port } = await createTestServer([
         {
             verb: 'post',
             path: '/bundle',
@@ -225,4 +237,5 @@ test('createRemoteBundle(sources) - other status codes', async () => {
     const result = client.createRemoteBundle(fakeSources);
 
     await expect(result).rejects.toEqual(new Error('Asset build server responded with unknown error. Http status 204'));
+    server.close();
 });
