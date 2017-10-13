@@ -2,10 +2,10 @@
 
 let Client = require('../../');
 
-function createRequestMock (error, response, body) {
+function createRequestMock(error, response, body) {
     const { PassThrough } = require('stream');
     return {
-        post (options, callback) {
+        post(options, callback) {
             const resolve = () => {
                 if (error) {
                     return callback(error);

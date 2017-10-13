@@ -15,7 +15,7 @@ jest.mock('asset-pipe-js-writer', () => {
             const items = [{}, {}, {}, {}];
             return new Readable({
                 objectMode: true,
-                read () {
+                read() {
                     if (!items.length) {
                         return this.push(null);
                     }
@@ -29,7 +29,7 @@ jest.mock('asset-pipe-js-writer', () => {
 
 const Client = require('../../');
 
-function createTestServer (handlers) {
+function createTestServer(handlers) {
     const server = express();
     for (const handler of handlers) {
         server[handler.verb](handler.path, handler.cb);
@@ -82,7 +82,10 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
 
     await client.uploadFeed(fakeFiles, fakeOptions);
 
-    expect(mockTransform.mock.calls[0]).toEqual([fakeTransform, fakeTransformOptions]);
+    expect(mockTransform.mock.calls[0]).toEqual([
+        fakeTransform,
+        fakeTransformOptions,
+    ]);
     server.close();
 });
 
@@ -162,7 +165,11 @@ test('uploadFeed(files) - other status codes', async () => {
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
-    await expect(result).rejects.toEqual(new Error('Asset build server responded with unknown error. Http status 300'));
+    await expect(result).rejects.toEqual(
+        new Error(
+            'Asset build server responded with unknown error. Http status 300'
+        )
+    );
     server.close();
 });
 
@@ -236,6 +243,10 @@ test('createRemoteBundle(sources) - other status codes', async () => {
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources);
 
-    await expect(result).rejects.toEqual(new Error('Asset build server responded with unknown error. Http status 204'));
+    await expect(result).rejects.toEqual(
+        new Error(
+            'Asset build server responded with unknown error. Http status 204'
+        )
+    );
     server.close();
 });
