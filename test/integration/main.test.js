@@ -3,13 +3,11 @@
 const express = require('express');
 
 let mockWriter;
-let mockPlugin;
-let mockTransform;
+const mockPlugin = jest.fn();
+const mockTransform = jest.fn();
 
 jest.mock('asset-pipe-js-writer', () => {
     const { Readable } = require('stream');
-    mockPlugin = jest.fn();
-    mockTransform = jest.fn();
     mockWriter = jest.fn(() => ({
         plugin: mockPlugin,
         transform: mockTransform,
@@ -29,7 +27,7 @@ jest.mock('asset-pipe-js-writer', () => {
     return mockWriter;
 });
 
-const Client = require('../');
+const Client = require('../../');
 
 function createTestServer (handlers) {
     const server = express();
@@ -42,49 +40,6 @@ function createTestServer (handlers) {
         });
     });
 }
-
-test('new Client(options)', () => {
-    expect.assertions(3);
-    const subject = new Client();
-
-    expect(subject.options).toEqual({
-        buildServerUri: 'http://127.0.0.1:7100',
-    });
-    expect(subject.transforms).toHaveLength(0);
-    expect(subject.plugins).toHaveLength(0);
-});
-
-test('new Client(options)', () => {
-    expect.assertions(1);
-    const buildServerUri = 'http://server';
-    const subject = new Client({ buildServerUri });
-
-    expect(subject.options).toEqual({
-        buildServerUri: 'http://server',
-    });
-});
-
-test('transform(transform, options)', () => {
-    expect.assertions(1);
-    const subject = new Client();
-    const transform = jest.fn();
-    const options = jest.fn();
-
-    subject.transform(transform, options);
-
-    expect(subject.transforms).toEqual([{ transform, options }]);
-});
-
-test('plugin(transform, options)', () => {
-    expect.hasAssertions();
-    const subject = new Client();
-    const plugin = jest.fn();
-    const options = jest.fn();
-
-    subject.plugin(plugin, options);
-
-    expect(subject.plugins).toEqual([{ plugin, options }]);
-});
 
 test('uploadFeed(files, options) - js', async () => {
     expect.assertions(1);
@@ -148,24 +103,6 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
     expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
 });
 
-test.skip('uploadFeed(files) - request error', async () => {
-    expect.assertions(1);
-    const port = await createTestServer([
-        {
-            verb: 'post',
-            path: '/feed',
-            cb: (req, res) => res.status(400).send('Bad request!'),
-        },
-    ]);
-    const fakeFiles = [];
-    const fakeOptions = {};
-    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
-
-    const result = client.uploadFeed(fakeFiles, fakeOptions);
-
-    await expect(result).resolves.toBe('Success!');
-});
-
 test('uploadFeed(files) - 200', async () => {
     expect.assertions(1);
     const port = await createTestServer([
@@ -220,24 +157,7 @@ test('uploadFeed(files) - other status codes', async () => {
     await expect(result).rejects.toEqual(new Error('Asset build server responded with unknown error. Http status 300'));
 });
 
-test.skip('uploadFeed(files) - css');
-
-test.skip('createRemoteBundle(sources) - request error', async () => {
-    expect.hasAssertions();
-    const port = await createTestServer([
-        {
-            verb: 'post',
-            path: '/bundle',
-            cb: (req, res, next) => next(new Error('Error!')),
-        },
-    ]);
-    const fakeSources = ['a12das3d', '12da321fd'];
-
-    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
-    const result = client.createRemoteBundle(fakeSources);
-
-    await expect(result).rejects.toBe('Error!');
-});
+test('uploadFeed(files) - css');
 
 test('createRemoteBundle(sources) - 200', async () => {
     expect.assertions(1);

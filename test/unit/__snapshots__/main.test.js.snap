@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`uploadFeed() - files array must only contain strings 1`] = `"Expected each item in array 'files' to be a string, got 1,true"`;
+
+exports[`uploadFeed() - files must be an array 1`] = `"Expected 'files' to be an array, instead got undefined"`;
