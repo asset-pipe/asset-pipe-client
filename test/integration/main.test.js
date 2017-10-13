@@ -80,7 +80,7 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
     const fakeTransformOptions = { _id: 2 };
     client.transform(fakeTransform, fakeTransformOptions);
 
-    const result = await client.uploadFeed(fakeFiles, fakeOptions);
+    await client.uploadFeed(fakeFiles, fakeOptions);
 
     expect(mockTransform.mock.calls[0]).toEqual([fakeTransform, fakeTransformOptions]);
     server.close();
@@ -103,7 +103,7 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
     const fakePluginOptions = { _id: 2 };
     client.plugin(fakePlugin, fakePluginOptions);
 
-    const result = await client.uploadFeed(fakeFiles, fakeOptions);
+    await client.uploadFeed(fakeFiles, fakeOptions);
 
     expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
     server.close();

@@ -1,7 +1,6 @@
 'use strict';
 
-const express = require('express');
-const Client = require('../../');
+let Client = require('../../');
 
 function createRequestMock (error, response, body) {
     const { PassThrough } = require('stream');
@@ -89,7 +88,7 @@ test('uploadFeed(files) - request error', async () => {
     expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
-    const Client = require('../../');
+    Client = require('../../');
     const fakeFiles = [];
     const fakeOptions = {};
     const client = new Client();
@@ -103,7 +102,7 @@ test('createRemoteBundle(sources) - request error', async () => {
     expect.hasAssertions();
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
-    const Client = require('../../');
+    Client = require('../../');
     const fakeSources = ['a12das3d', '12da321fd'];
     const client = new Client();
 
