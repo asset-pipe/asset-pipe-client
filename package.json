@@ -5,7 +5,10 @@
     "name": "Trygve Lie",
     "email": "post@trygve-lie.com"
   },
-  "files": ["bin", "lib"],
+  "files": [
+    "bin",
+    "lib"
+  ],
   "description": "Asset pipe client",
   "main": "./lib/main.js",
   "bin": "./bin/cli.js",
@@ -13,7 +16,9 @@
     "type": "git",
     "url": "git@github.com:asset-pipe/asset-pipe-cli.git"
   },
-  "keywords": ["assets"],
+  "keywords": [
+    "assets"
+  ],
   "contributors": [
     {
       "name": "Trygve Lie",
@@ -34,19 +39,22 @@
   "devDependencies": {
     "asset-pipe-test-es5a": "^1.0.0",
     "asset-pipe-test-es5b": "^1.0.0",
+    "commitizen": "^2.9.6",
     "eslint": "^4.1.0",
     "eslint-config-finn": "^2.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "express": "^4.16.2",
+    "husky": "^0.14.3",
     "jest": "^21.2.1",
+    "lint-staged": "^4.2.3",
     "prettier": "^1.7.4",
     "tap": "10.7.0"
   },
   "scripts": {
-    "lint:format":
-      "eslint --fix .",
+    "lint:format": "eslint --fix .",
     "lint": "eslint .",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "precommit": "lint-staged"
   },
   "jest": {
     "clearMocks": true,
@@ -58,5 +66,11 @@
         "statements": 100
       }
     }
+  },
+  "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/eslint --fix --config ./.eslintrc",
+      "git add"
+    ]
   }
 }
