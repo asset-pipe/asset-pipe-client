@@ -27,6 +27,21 @@ jest.mock('asset-pipe-js-writer', () => {
     return mockWriter;
 });
 
+jest.mock('asset-pipe-css-writer', () => {
+    const { Readable } = require('stream');
+    const items = [{}, {}, {}, {}];
+    const cssWriter = new Readable({
+        objectMode: true,
+        read() {
+            if (!items.length) {
+                return this.push(null);
+            }
+            this.push(items.shift());
+        },
+    });
+    return jest.fn(() => cssWriter);
+});
+
 const Client = require('../../');
 
 function createTestServer(handlers) {
@@ -53,7 +68,7 @@ test('uploadFeed(files, options) - js', async () => {
             cb: (req, res) => res.send('Success!'),
         },
     ]);
-    const fakeFiles = [];
+    const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -72,7 +87,7 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
             cb: (req, res) => res.send('Success!'),
         },
     ]);
-    const fakeFiles = [];
+    const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -98,7 +113,7 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
             cb: (req, res) => res.send('Success!'),
         },
     ]);
-    const fakeFiles = [];
+    const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -121,7 +136,7 @@ test('uploadFeed(files) - 200', async () => {
             cb: (req, res) => res.status(200).send('Bad request!'),
         },
     ]);
-    const fakeFiles = [];
+    const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -140,7 +155,7 @@ test('uploadFeed(files) - 400', async () => {
             cb: (req, res) => res.status(400).send({ message: 'Bad request!' }),
         },
     ]);
-    const fakeFiles = [];
+    const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -159,7 +174,7 @@ test('uploadFeed(files) - other status codes', async () => {
             cb: (req, res) => res.status(300).send('Bad request!'),
         },
     ]);
-    const fakeFiles = [];
+    const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -173,7 +188,23 @@ test('uploadFeed(files) - other status codes', async () => {
     server.close();
 });
 
-test('uploadFeed(files) - css');
+test('uploadFeed(files) - css', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/feed',
+            cb: (req, res) => res.status(200).send('ok'),
+        },
+    ]);
+    const fakeFiles = ['first.css', 'second.css', 'third.css'];
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const result = client.uploadFeed(fakeFiles);
+
+    await expect(result).resolves.toBe('ok');
+    server.close();
+});
 
 test('createRemoteBundle(sources) - 200', async () => {
     expect.assertions(1);

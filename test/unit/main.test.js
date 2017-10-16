@@ -84,6 +84,15 @@ test('uploadFeed() - files array must only contain strings', () => {
     expect(result).toThrowErrorMatchingSnapshot();
 });
 
+test('uploadFeed() - files array must contain .css or .js filenames', () => {
+    expect.assertions(1);
+    const client = new Client();
+
+    const result = () => client.uploadFeed(['one', 'two']);
+
+    expect(result).toThrowErrorMatchingSnapshot();
+});
+
 test('uploadFeed(files) - request error', async () => {
     expect.assertions(1);
     jest.resetModules();
