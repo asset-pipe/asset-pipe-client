@@ -1,4 +1,19 @@
-# asset-pipe-client
+<!-- TITLE/ -->
+
+<h1>asset-pipe-client</h1>
+
+<!-- /TITLE -->
+
+
+<!-- BADGES/ -->
+
+<span class="badge-travisci"><a href="http://travis-ci.org/asset-pipe/asset-pipe-client" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/asset-pipe/asset-pipe-client/master.svg" alt="Travis CI Build Status" /></a></span>
+<span class="badge-npmversion"><a href="https://npmjs.org/package/asset-pipe-client" title="View this project on NPM"><img src="https://img.shields.io/npm/v/asset-pipe-client.svg" alt="NPM version" /></a></span>
+<span class="badge-daviddm"><a href="https://david-dm.org/asset-pipe/asset-pipe-client" title="View the status of this project's dependencies on DavidDM"><img src="https://img.shields.io/david/asset-pipe/asset-pipe-client.svg" alt="Dependency Status" /></a></span>
+<span class="badge-daviddmdev"><a href="https://david-dm.org/asset-pipe/asset-pipe-client#info=devDependencies" title="View the status of this project's development dependencies on DavidDM"><img src="https://img.shields.io/david/dev/asset-pipe/asset-pipe-client.svg" alt="Dev Dependency Status" /></a></span>
+
+<!-- /BADGES -->
+
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/asset-pipe/asset-pipe-client.svg)](https://greenkeeper.io/)
 
