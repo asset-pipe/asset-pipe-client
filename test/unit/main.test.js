@@ -23,6 +23,30 @@ function createRequestMock(error, response, body) {
     };
 }
 
+function createJsWriterMock() {
+    const { Readable } = require('stream');
+    return jest.fn(() => ({
+        plugin: jest.fn(),
+        transform: jest.fn(),
+        bundle: () => {
+            const items = [{}, {}, {}, {}];
+            return new Readable({
+                objectMode: true,
+                read() {
+                    if (!items.length) {
+                        return this.push(null);
+                    }
+                    this.push(items.shift());
+                },
+            });
+        },
+    }));
+}
+
+beforeEach(() => {
+    jest.resetModules();
+});
+
 test('new Client(options)', () => {
     expect.assertions(3);
     const subject = new Client();
@@ -75,6 +99,15 @@ test('uploadFeed() - files must be an array', () => {
     expect(result).toThrowErrorMatchingSnapshot();
 });
 
+test('uploadFeed() - files must contain at least 1 item', () => {
+    expect.assertions(1);
+    const client = new Client();
+
+    const result = () => client.uploadFeed([]);
+
+    expect(result).toThrowErrorMatchingSnapshot();
+});
+
 test('uploadFeed() - files array must only contain strings', () => {
     expect.assertions(1);
     const client = new Client();
@@ -97,8 +130,9 @@ test('uploadFeed(files) - request error', async () => {
     expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
+    jest.doMock('asset-pipe-js-writer', () => createJsWriterMock());
     Client = require('../../');
-    const fakeFiles = [];
+    const fakeFiles = ['first.js'];
     const fakeOptions = {};
     const client = new Client();
 
@@ -111,6 +145,7 @@ test('createRemoteBundle(sources) - request error', async () => {
     expect.hasAssertions();
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
+    jest.doMock('asset-pipe-js-writer', () => createJsWriterMock());
     Client = require('../../');
     const fakeSources = ['a12das3d', '12da321fd'];
     const client = new Client();
