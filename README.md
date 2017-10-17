@@ -207,3 +207,11 @@ The contribution process is as follows:
 - Stage your changes.
 - Run `git commit` or, if you are not familiar with [sematic commit messages](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit), please run `npm run cm` and follow the prompts instead which will help you write a correct semantic commit message.
 - Push your changes and submit a PR.
+
+[commonjs]: https://nodejs.org/docs/latest/api/modules.html
+[asset-pipe]: https://github.com/asset-pipe
+[asset-pipe-build-server]: https://github.com/asset-pipe/asset-pipe-build-server
+[browserify]: https://github.com/substack/node-browserify
+[browserify-opts]: https://github.com/substack/node-browserify#browserifyfiles--opts
+[browserify-plugin]: https://github.com/substack/node-browserify#bpluginplugin-opts
+[browserify-transform]: https://github.com/substack/node-browserify#btransformtr-opts
