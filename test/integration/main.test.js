@@ -88,7 +88,7 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
         {
             verb: 'post',
             path: '/feed',
-            cb: (req, res) => res.send({ message: 'Success!' }),
+            cb: (req, res) => res.send('Success!'),
         },
     ]);
     const fakeFiles = ['first.js', 'second.js'];
