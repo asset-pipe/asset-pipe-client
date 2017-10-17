@@ -7,6 +7,12 @@ let mockWriter;
 const mockPlugin = jest.fn();
 const mockTransform = jest.fn();
 
+function closeServer(server) {
+    return new Promise(resolve => {
+        server.close(resolve);
+    });
+}
+
 jest.mock('asset-pipe-js-writer', () => {
     const { Readable } = require('stream');
     mockWriter = jest.fn(() => ({
@@ -79,7 +85,7 @@ test('uploadFeed(files, options) - js', async () => {
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
     await expect(result).resolves.toEqual({ message: 'Success!' });
-    server.close();
+    await closeServer(server);
 });
 
 test('uploadFeed(files, options) - js - uses transforms', async () => {
@@ -105,7 +111,7 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
         fakeTransform,
         fakeTransformOptions,
     ]);
-    server.close();
+    await closeServer(server);
 });
 
 test('uploadFeed(files, options) - js - uses plugins', async () => {
@@ -128,7 +134,7 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
     await client.uploadFeed(fakeFiles, fakeOptions);
 
     expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
-    server.close();
+    await closeServer(server);
 });
 
 test('uploadFeed(files) - 200', async () => {
@@ -147,7 +153,7 @@ test('uploadFeed(files) - 200', async () => {
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
     await expect(result).resolves.toEqual({ message: 'Bad request!' });
-    server.close();
+    await closeServer(server);
 });
 
 test('uploadFeed(files) - 400', async () => {
@@ -166,7 +172,7 @@ test('uploadFeed(files) - 400', async () => {
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
     await expect(result).rejects.toEqual(new Error('Bad request!'));
-    server.close();
+    await closeServer(server);
 });
 
 test('uploadFeed(files) - other status codes', async () => {
@@ -189,7 +195,7 @@ test('uploadFeed(files) - other status codes', async () => {
             'Asset build server responded with unknown error. Http status 300'
         )
     );
-    server.close();
+    await closeServer(server);
 });
 
 test('uploadFeed(files) - css', async () => {
@@ -207,7 +213,7 @@ test('uploadFeed(files) - css', async () => {
     const result = client.uploadFeed(fakeFiles);
 
     await expect(result).resolves.toEqual([{}, {}, {}, {}]);
-    server.close();
+    await closeServer(server);
 });
 
 test('createRemoteBundle(sources) - 200', async () => {
@@ -225,7 +231,7 @@ test('createRemoteBundle(sources) - 200', async () => {
     const result = client.createRemoteBundle(fakeSources);
 
     await expect(result).resolves.toEqual(fakeSources);
-    server.close();
+    await closeServer(server);
 });
 
 test('createRemoteBundle(sources) - 202', async () => {
@@ -243,7 +249,7 @@ test('createRemoteBundle(sources) - 202', async () => {
     const result = client.createRemoteBundle(fakeSources);
 
     await expect(result).resolves.toEqual({ message: 'success 202' });
-    server.close();
+    await closeServer(server);
 });
 
 test('createRemoteBundle(sources) - 400', async () => {
@@ -261,7 +267,7 @@ test('createRemoteBundle(sources) - 400', async () => {
     const result = client.createRemoteBundle(fakeSources);
 
     await expect(result).rejects.toEqual(new Error('Bad request'));
-    server.close();
+    await closeServer(server);
 });
 
 test('createRemoteBundle(sources) - other status codes', async () => {
@@ -284,5 +290,5 @@ test('createRemoteBundle(sources) - other status codes', async () => {
             'Asset build server responded with unknown error. Http status 420'
         )
     );
-    server.close();
+    await closeServer(server);
 });
