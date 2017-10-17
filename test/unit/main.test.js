@@ -90,40 +90,48 @@ test('plugin(transform, options)', () => {
     expect(subject.plugins).toEqual([{ plugin, options }]);
 });
 
-test('uploadFeed() - files must be an array', () => {
+test('uploadFeed() - files must be an array', async () => {
     expect.assertions(1);
     const client = new Client();
 
-    const result = () => client.uploadFeed();
-
-    expect(result).toThrowErrorMatchingSnapshot();
+    try {
+        await client.uploadFeed();
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
 });
 
-test('uploadFeed() - files must contain at least 1 item', () => {
+test('uploadFeed() - files must contain at least 1 item', async () => {
     expect.assertions(1);
     const client = new Client();
 
-    const result = () => client.uploadFeed([]);
-
-    expect(result).toThrowErrorMatchingSnapshot();
+    try {
+        await client.uploadFeed([]);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
 });
 
-test('uploadFeed() - files array must only contain strings', () => {
+test('uploadFeed() - files array must only contain strings', async () => {
     expect.assertions(1);
     const client = new Client();
 
-    const result = () => client.uploadFeed([1, true]);
-
-    expect(result).toThrowErrorMatchingSnapshot();
+    try {
+        await client.uploadFeed([1, true]);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
 });
 
-test('uploadFeed() - files array must contain .css or .js filenames', () => {
+test('uploadFeed() - files array must contain .css or .js filenames', async () => {
     expect.assertions(1);
     const client = new Client();
 
-    const result = () => client.uploadFeed(['one', 'two']);
-
-    expect(result).toThrowErrorMatchingSnapshot();
+    try {
+        await client.uploadFeed(['one', 'two']);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
 });
 
 test('uploadFeed(files) - request error', async () => {
