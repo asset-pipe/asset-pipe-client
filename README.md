@@ -1,4 +1,19 @@
-# asset-pipe-client
+<!-- TITLE/ -->
+
+<h1>asset-pipe-client</h1>
+
+<!-- /TITLE -->
+
+
+<!-- BADGES/ -->
+
+<span class="badge-travisci"><a href="http://travis-ci.org/asset-pipe/asset-pipe-client" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/asset-pipe/asset-pipe-client/master.svg" alt="Travis CI Build Status" /></a></span>
+<span class="badge-npmversion"><a href="https://npmjs.org/package/asset-pipe-client" title="View this project on NPM"><img src="https://img.shields.io/npm/v/asset-pipe-client.svg" alt="NPM version" /></a></span>
+<span class="badge-daviddm"><a href="https://david-dm.org/asset-pipe/asset-pipe-client" title="View the status of this project's dependencies on DavidDM"><img src="https://img.shields.io/david/asset-pipe/asset-pipe-client.svg" alt="Dependency Status" /></a></span>
+<span class="badge-daviddmdev"><a href="https://david-dm.org/asset-pipe/asset-pipe-client#info=devDependencies" title="View the status of this project's development dependencies on DavidDM"><img src="https://img.shields.io/david/dev/asset-pipe/asset-pipe-client.svg" alt="Dev Dependency Status" /></a></span>
+
+<!-- /BADGES -->
+
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/asset-pipe/asset-pipe-client.svg)](https://greenkeeper.io/)
 
@@ -140,38 +155,13 @@ client.uploadFeed()
     });
 ```
 
+## Contributing
 
+The contribution process is as follows:
 
-## License
-
-The MIT License (MIT)
-
-Copyright (c) 2017 - Trygve Lie - post@trygve-lie.com
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-
-
-[commonjs]: https://nodejs.org/docs/latest/api/modules.html
-[asset-pipe]: https://github.com/asset-pipe
-[asset-pipe-build-server]: https://github.com/asset-pipe/asset-pipe-build-server
-[browserify]: https://github.com/substack/node-browserify
-[browserify-opts]: https://github.com/substack/node-browserify#browserifyfiles--opts
-[browserify-plugin]: https://github.com/substack/node-browserify#bpluginplugin-opts
-[browserify-transform]: https://github.com/substack/node-browserify#btransformtr-opts
+- Fork this repository.
+- Make your changes as desired.
+- Run the tests using `npm test`. This will also check to ensure that 100% code coverage is maintained. If not you may need to add additional tests.
+- Stage your changes.
+- Run `git commit` or, if you are not familiar with [sematic commit messages](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit), please run `npm run cm` and follow the prompts instead which will help you write a correct semantic commit message.
+- Push your changes and submit a PR.
