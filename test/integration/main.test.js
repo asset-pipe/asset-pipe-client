@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
 
 let mockWriter;
 const mockPlugin = jest.fn();
@@ -46,6 +47,7 @@ const Client = require('../../');
 
 function createTestServer(handlers) {
     const server = express();
+    server.use(bodyParser.json());
     for (const handler of handlers) {
         server[handler.verb](handler.path, handler.cb);
     }
@@ -65,7 +67,9 @@ test('uploadFeed(files, options) - js', async () => {
         {
             verb: 'post',
             path: '/feed',
-            cb: (req, res) => res.send('Success!'),
+            cb(req, res) {
+                res.send({ message: 'Success!' });
+            },
         },
     ]);
     const fakeFiles = ['first.js', 'second.js'];
@@ -74,7 +78,7 @@ test('uploadFeed(files, options) - js', async () => {
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
-    await expect(result).resolves.toBe('Success!');
+    await expect(result).resolves.toEqual({ message: 'Success!' });
     server.close();
 });
 
@@ -84,7 +88,7 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
         {
             verb: 'post',
             path: '/feed',
-            cb: (req, res) => res.send('Success!'),
+            cb: (req, res) => res.send({ message: 'Success!' }),
         },
     ]);
     const fakeFiles = ['first.js', 'second.js'];
@@ -110,7 +114,7 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
         {
             verb: 'post',
             path: '/feed',
-            cb: (req, res) => res.send('Success!'),
+            cb: (req, res) => res.send({ message: 'Success!' }),
         },
     ]);
     const fakeFiles = ['first.js', 'second.js'];
@@ -133,7 +137,7 @@ test('uploadFeed(files) - 200', async () => {
         {
             verb: 'post',
             path: '/feed',
-            cb: (req, res) => res.status(200).send('Bad request!'),
+            cb: (req, res) => res.status(200).send({ message: 'Bad request!' }),
         },
     ]);
     const fakeFiles = ['first.js', 'second.js'];
@@ -142,7 +146,7 @@ test('uploadFeed(files) - 200', async () => {
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
-    await expect(result).resolves.toBe('Bad request!');
+    await expect(result).resolves.toEqual({ message: 'Bad request!' });
     server.close();
 });
 
@@ -171,7 +175,7 @@ test('uploadFeed(files) - other status codes', async () => {
         {
             verb: 'post',
             path: '/feed',
-            cb: (req, res) => res.status(300).send('Bad request!'),
+            cb: (req, res) => res.status(300).send({ message: 'Bad request!' }),
         },
     ]);
     const fakeFiles = ['first.js', 'second.js'];
@@ -194,7 +198,7 @@ test('uploadFeed(files) - css', async () => {
         {
             verb: 'post',
             path: '/feed',
-            cb: (req, res) => res.status(200).send('ok'),
+            cb: (req, res) => res.status(200).send(req.body),
         },
     ]);
     const fakeFiles = ['first.css', 'second.css', 'third.css'];
@@ -202,7 +206,7 @@ test('uploadFeed(files) - css', async () => {
 
     const result = client.uploadFeed(fakeFiles);
 
-    await expect(result).resolves.toBe('ok');
+    await expect(result).resolves.toEqual([{}, {}, {}, {}]);
     server.close();
 });
 
@@ -212,7 +216,7 @@ test('createRemoteBundle(sources) - 200', async () => {
         {
             verb: 'post',
             path: '/bundle',
-            cb: (req, res) => res.send('success!'),
+            cb: (req, res) => res.send(req.body),
         },
     ]);
     const fakeSources = ['a12das3d', '12da321fd'];
@@ -220,7 +224,7 @@ test('createRemoteBundle(sources) - 200', async () => {
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources);
 
-    await expect(result).resolves.toBe('success!');
+    await expect(result).resolves.toEqual(fakeSources);
     server.close();
 });
 
@@ -230,7 +234,7 @@ test('createRemoteBundle(sources) - 202', async () => {
         {
             verb: 'post',
             path: '/bundle',
-            cb: (req, res) => res.status(202).send('success 202'),
+            cb: (req, res) => res.status(202).send({ message: 'success 202' }),
         },
     ]);
     const fakeSources = ['a12das3d', '12da321fd'];
@@ -238,7 +242,7 @@ test('createRemoteBundle(sources) - 202', async () => {
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources);
 
-    await expect(result).resolves.toBe('success 202');
+    await expect(result).resolves.toEqual({ message: 'success 202' });
     server.close();
 });
 
@@ -266,7 +270,8 @@ test('createRemoteBundle(sources) - other status codes', async () => {
         {
             verb: 'post',
             path: '/bundle',
-            cb: (req, res) => res.status(204).send(),
+            cb: (req, res) =>
+                res.status(420).send({ message: 'Its that time again' }),
         },
     ]);
     const fakeSources = ['a12das3d', '12da321fd'];
@@ -276,7 +281,7 @@ test('createRemoteBundle(sources) - other status codes', async () => {
 
     await expect(result).rejects.toEqual(
         new Error(
-            'Asset build server responded with unknown error. Http status 204'
+            'Asset build server responded with unknown error. Http status 420'
         )
     );
     server.close();
