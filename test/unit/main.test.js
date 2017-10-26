@@ -158,7 +158,7 @@ test('createRemoteBundle(sources) - request error', async () => {
     const fakeSources = ['a12das3d', '12da321fd'];
     const client = new Client();
 
-    const result = client.createRemoteBundle(fakeSources);
+    const result = client.createRemoteBundle(fakeSources, 'js');
 
     await expect(result).rejects.toEqual(new Error('Fake error!'));
 });

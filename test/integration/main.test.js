@@ -72,7 +72,7 @@ test('uploadFeed(files, options) - js', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/feed',
+            path: '/feed/js',
             cb(req, res) {
                 res.send({ message: 'Success!' });
             },
@@ -93,7 +93,7 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/feed',
+            path: '/feed/js',
             cb: (req, res) => res.send('Success!'),
         },
     ]);
@@ -119,7 +119,7 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/feed',
+            path: '/feed/js',
             cb: (req, res) => res.send({ message: 'Success!' }),
         },
     ]);
@@ -142,7 +142,7 @@ test('uploadFeed(files) - 200', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/feed',
+            path: '/feed/js',
             cb: (req, res) => res.status(200).send({ message: 'Bad request!' }),
         },
     ]);
@@ -161,7 +161,7 @@ test('uploadFeed(files) - 400', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/feed',
+            path: '/feed/js',
             cb: (req, res) => res.status(400).send({ message: 'Bad request!' }),
         },
     ]);
@@ -180,7 +180,7 @@ test('uploadFeed(files) - other status codes', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/feed',
+            path: '/feed/js',
             cb: (req, res) => res.status(300).send({ message: 'Bad request!' }),
         },
     ]);
@@ -203,7 +203,7 @@ test('uploadFeed(files) - css', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/feed',
+            path: '/feed/css',
             cb: (req, res) => res.status(200).send(req.body),
         },
     ]);
@@ -221,14 +221,14 @@ test('createRemoteBundle(sources) - 200', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/bundle',
+            path: '/bundle/js',
             cb: (req, res) => res.send(req.body),
         },
     ]);
     const fakeSources = ['a12das3d', '12da321fd'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
-    const result = client.createRemoteBundle(fakeSources);
+    const result = client.createRemoteBundle(fakeSources, 'js');
 
     await expect(result).resolves.toEqual(fakeSources);
     await closeServer(server);
@@ -239,14 +239,14 @@ test('createRemoteBundle(sources) - 202', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/bundle',
+            path: '/bundle/js',
             cb: (req, res) => res.status(202).send({ message: 'success 202' }),
         },
     ]);
     const fakeSources = ['a12das3d', '12da321fd'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
-    const result = client.createRemoteBundle(fakeSources);
+    const result = client.createRemoteBundle(fakeSources, 'js');
 
     await expect(result).resolves.toEqual({ message: 'success 202' });
     await closeServer(server);
@@ -257,14 +257,14 @@ test('createRemoteBundle(sources) - 400', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/bundle',
+            path: '/bundle/js',
             cb: (req, res) => res.status(400).send({ message: 'Bad request' }),
         },
     ]);
     const fakeSources = ['a12das3d', '12da321fd'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
-    const result = client.createRemoteBundle(fakeSources);
+    const result = client.createRemoteBundle(fakeSources, 'js');
 
     await expect(result).rejects.toEqual(new Error('Bad request'));
     await closeServer(server);
@@ -275,7 +275,7 @@ test('createRemoteBundle(sources) - other status codes', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
-            path: '/bundle',
+            path: '/bundle/js',
             cb: (req, res) =>
                 res.status(420).send({ message: 'Its that time again' }),
         },
@@ -283,7 +283,7 @@ test('createRemoteBundle(sources) - other status codes', async () => {
     const fakeSources = ['a12das3d', '12da321fd'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
-    const result = client.createRemoteBundle(fakeSources);
+    const result = client.createRemoteBundle(fakeSources, 'js');
 
     await expect(result).rejects.toEqual(
         new Error(
