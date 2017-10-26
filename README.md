@@ -17,21 +17,20 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/asset-pipe/asset-pipe-client.svg)](https://greenkeeper.io/)
 
-A client for read an [CommonJS module][commonjs] entry point and uploading it as an asset feeds to- and
-triggering builds of executable asset bundles in the [asset-pipe-build-server][asset-pipe-build-server].
+A client for reading an asset file entry point and uploading it as an asset feed to a [asset-pipe-build-server][asset-pipe-build-server]
+and for triggering builds of executable asset bundles in the said server.
 
 Creating asset bundles with [asset-pipe][asset-pipe] is a two step process. The first step is to upload
-an asset feed to the [asset-pipe-build-server][asset-pipe-build-server]. On an upload the asset-feed
+an asset feed to the [asset-pipe-build-server][asset-pipe-build-server]. On upload the asset-feed
 will be persisted and the [asset-pipe-build-server][asset-pipe-build-server] will return the generated
 filename of the uploaded asset-feed.
 
 The second step is then to create a bundle out of one or multiple asset-feeds. This is done by providing
-the unique ID(s) of the asset-feeds one want to use to build an asset bundle to the
+the unique ID(s) of the asset-feeds one wants to use to build an asset bundle to the
 [asset-pipe-build-server][asset-pipe-build-server]. The build server will then create an executable asset
 bundle out of these asset-feeds and persist this. It will respond with the URL to the bundle.
 
-This client helps with remotly triggering these steps in the [asset-pipe-build-server][asset-pipe-build-server].
-
+This client helps with remotely triggering these steps in the [asset-pipe-build-server][asset-pipe-build-server].
 
 
 ## Installation
@@ -39,8 +38,6 @@ This client helps with remotly triggering these steps in the [asset-pipe-build-s
 ```bash
 $ npm install asset-pipe-client
 ```
-
-
 
 ## Example I
 
@@ -64,10 +61,31 @@ client.uploadFeed(['path/to/myFrontendCode.js'])
     });
 ```
 
-
 ## Example II
 
-Build an javascript bundle out of two asset feeds:
+Read a CSS file entry point and upload it as an asset-feed to the
+[asset-pipe-build-server][asset-pipe-build-server]:
+
+```js
+const Client = require('asset-pipe-client');
+
+const client = new Client({
+    buildServerUri: 'http://127.0.0.1:7100',
+});
+
+client.uploadFeed(['/path/to/styles.css'])
+    .then((content) => {
+        // content contains filename of created the asset-feed
+        console.log(content);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+```
+
+## Example III
+
+Build a javascript bundle out of two asset feeds:
 
 ```js
 const Client = require('asset-pipe-client');
@@ -76,9 +94,9 @@ const client = new Client({
 });
 
 bundle.createRemoteBundle([
-        'f09a737b36b7ca19a224e0d78cc50222d636fd7af6f7913b01521590d0d7fe02.json',
-        'c50ca03a63650502e1b72baf4e493d2eaa0e4aa38aa2951825e101b1d6ddb68b.json'
-    ])
+    'f09a737b36b7ca19a224e0d78cc50222d636fd7af6f7913b01521590d0d7fe02.json',
+    'c50ca03a63650502e1b72baf4e493d2eaa0e4aa38aa2951825e101b1d6ddb68b.json'
+], 'js')
     .then((content) => {
         // content contains URI to the created bundle
         console.log(content);
@@ -88,15 +106,38 @@ bundle.createRemoteBundle([
     });
 ```
 
+## Example IIII
 
+Build a CSS bundle out of two asset feeds:
+
+```js
+const Client = require('asset-pipe-client');
+const client = new Client({
+    buildServerUri: 'http://127.0.0.1:7100',
+});
+
+bundle.createRemoteBundle([
+    'f09a737b36b7ca19a224e0d78cc50222d636fd7af6f7913b01521590d0d7fe02.json',
+    'c50ca03a63650502e1b72baf4e493d2eaa0e4aa38aa2951825e101b1d6ddb68b.json'
+], 'css')
+    .then((content) => {
+        // content contains URI to the created bundle
+        console.log(content);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+```
 
 ## API
 
-Under the hood, the [asset-pipe][asset-pipe] project build on [browserify][Browserify]. Multiple methods
-in this module are therefor underlaying Browserify methods where all features found in Browserify can
+Under the hood, when working with javascript, the [asset-pipe][asset-pipe] project builds on [browserify][Browserify]. 
+Multiple methods in this module are therefor underlaying Browserify methods where all features found in Browserify can
 be used. Such methods will in this documentation point to the related documentation in Browserify.
 
-This module have the following API:
+When working with CSS the underlying POST CSS is used but the implementation is not exposed so there are no additional supported methods.
+
+This module has the following API:
 
 ### constructor(options)
 
@@ -107,31 +148,32 @@ Supported arguments are:
 ### transform()
 
 Same as the [Browserify transform][browserify-transform] method.
+*NOTE:* Only applicable when uploading javascript feeds.
 
 ### plugin()
 
 Same as the [Browserify plugin][browserify-plugin] method.
+*NOTE:* Only applicable when uploading javascript feeds.
 
 ### uploadFeed(files)
 
-Read the [CommonJS module][commonjs] entry point and uploads it as an asset feeds to the [asset-pipe-build-server][asset-pipe-build-server].
+Read the [CommonJS module][commonjs] or CSS file entry point and uploads it as an asset feed to the [asset-pipe-build-server][asset-pipe-build-server].
 
- * `files` - Array - List of CommonJS module entry points - Same as `files` in the [Browserify constructor][browserify-opts]
+ * `files` - Array - Either list of CommonJS module entry points - Same as `files` in the [Browserify constructor][browserify-opts] OR list of paths to CSS files
 
 Returns a promise.
 
-### createRemoteBundle(feeds)
+### createRemoteBundle(feeds, type)
 
 Creates an asset bundle on the [asset-pipe-build-server][asset-pipe-build-server].
 
  * `feeds` - Array - List of asset-feed filenames.
-
-
+ * `type` - string - Either 'js' or 'css'
 
 ## Transpilers
 
 Since [asset-pipe][asset-pipe] is built on [browserify][Browserify] under the hood, its fully possible
-to take advantage of the different transpiers available for [browserify][Browserify].
+to take advantage of the different transpiers available for [browserify][Browserify] when working with javascript.
 
 As an example, here is how Babel is applied:
 
