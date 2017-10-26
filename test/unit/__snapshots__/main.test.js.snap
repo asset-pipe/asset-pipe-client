@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`createRemoteBundle() - missing source argument 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'sources' to be an array. Instead got undefined]`;
+
+exports[`createRemoteBundle(sources) - invalid source argument 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'sources' to be an array. Instead got string]`;
+
+exports[`createRemoteBundle(sources) - invalid type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'fake']`;
+
+exports[`createRemoteBundle(sources) - missing type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'undefined']`;
+
+exports[`createRemoteBundle(sources) - source argument missing .json ext. 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'sources' to end with .json. Instead got a1c12a45ca1ac1ca1cc1ac1ca1]`;
+
 exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `
 [AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js 
                 or ALL items in array 'files' to end with .css, got one,two]

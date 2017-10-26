@@ -234,6 +234,24 @@ test('createRemoteBundle(sources) - 200', async () => {
     await closeServer(server);
 });
 
+test('createRemoteBundle(sources) - css', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/bundle/css',
+            cb: (req, res) => res.send(req.body),
+        },
+    ]);
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const result = client.createRemoteBundle(fakeSources, 'css');
+
+    await expect(result).resolves.toEqual(fakeSources);
+    await closeServer(server);
+});
+
 test('createRemoteBundle(sources) - 202', async () => {
     expect.assertions(1);
     const { server, port } = await createTestServer([

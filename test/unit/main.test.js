@@ -150,7 +150,7 @@ test('uploadFeed(files) - request error', async () => {
 });
 
 test('createRemoteBundle(sources) - request error', async () => {
-    expect.hasAssertions();
+    expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
     jest.doMock('asset-pipe-js-writer', () => createJsWriterMock());
@@ -161,4 +161,56 @@ test('createRemoteBundle(sources) - request error', async () => {
     const result = client.createRemoteBundle(fakeSources, 'js');
 
     await expect(result).rejects.toEqual(new Error('Fake error!'));
+});
+
+test('createRemoteBundle() - missing source argument', async () => {
+    expect.assertions(1);
+    const client = new Client();
+    try {
+        await client.createRemoteBundle();
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('createRemoteBundle(sources) - invalid source argument', async () => {
+    expect.assertions(1);
+    const client = new Client();
+    try {
+        await client.createRemoteBundle('asd');
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('createRemoteBundle(sources) - source argument missing .json ext.', async () => {
+    expect.assertions(1);
+    const client = new Client();
+    try {
+        await client.createRemoteBundle(['a1c12a45ca1ac1ca1cc1ac1ca1']);
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('createRemoteBundle(sources) - missing type', async () => {
+    expect.assertions(1);
+    const client = new Client();
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
+    try {
+        await client.createRemoteBundle(fakeSources);
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('createRemoteBundle(sources) - invalid type', async () => {
+    expect.assertions(1);
+    const client = new Client();
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
+    try {
+        await client.createRemoteBundle(fakeSources, 'fake');
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
 });
