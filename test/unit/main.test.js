@@ -155,7 +155,7 @@ test('createRemoteBundle(sources) - request error', async () => {
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
     jest.doMock('asset-pipe-js-writer', () => createJsWriterMock());
     Client = require('../../');
-    const fakeSources = ['a12das3d', '12da321fd'];
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
     const client = new Client();
 
     const result = client.createRemoteBundle(fakeSources, 'js');

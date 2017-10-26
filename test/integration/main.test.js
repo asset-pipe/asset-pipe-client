@@ -225,7 +225,7 @@ test('createRemoteBundle(sources) - 200', async () => {
             cb: (req, res) => res.send(req.body),
         },
     ]);
-    const fakeSources = ['a12das3d', '12da321fd'];
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources, 'js');
@@ -243,7 +243,7 @@ test('createRemoteBundle(sources) - 202', async () => {
             cb: (req, res) => res.status(202).send({ message: 'success 202' }),
         },
     ]);
-    const fakeSources = ['a12das3d', '12da321fd'];
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources, 'js');
@@ -261,7 +261,7 @@ test('createRemoteBundle(sources) - 400', async () => {
             cb: (req, res) => res.status(400).send({ message: 'Bad request' }),
         },
     ]);
-    const fakeSources = ['a12das3d', '12da321fd'];
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources, 'js');
@@ -280,7 +280,7 @@ test('createRemoteBundle(sources) - other status codes', async () => {
                 res.status(420).send({ message: 'Its that time again' }),
         },
     ]);
-    const fakeSources = ['a12das3d', '12da321fd'];
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources, 'js');
