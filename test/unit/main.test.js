@@ -2,6 +2,8 @@
 
 let Client = require('../../');
 
+const buildServerUri = 'http://server';
+
 function createRequestMock(error, response, body) {
     const { PassThrough } = require('stream');
     return {
@@ -47,30 +49,42 @@ beforeEach(() => {
     jest.resetModules();
 });
 
-test('new Client(options)', () => {
-    expect.assertions(3);
-    const subject = new Client();
+test('new Client(options) - should throw when missing buildServerUri option', () => {
+    expect(() => {
+        // eslint-disable-next-line no-new
+        new Client();
+    }).toThrowError('Expected "buildServerUri" to be a uri, got undefined');
+});
 
-    expect(subject.options).toEqual({
-        buildServerUri: 'http://127.0.0.1:7100',
+test('new Client(options)', () => {
+    const subject = new Client({
+        buildServerUri: 'http://127.0.0.1:9999',
     });
+
+    expect(subject.buildServerUri).toEqual('http://127.0.0.1:9999');
+    expect(subject.serverId).toEqual(undefined);
     expect(subject.transforms).toHaveLength(0);
     expect(subject.plugins).toHaveLength(0);
 });
 
-test('new Client(options)', () => {
-    expect.assertions(1);
-    const buildServerUri = 'http://server';
+test('new Client(options) 2', () => {
+    const subject = new Client({
+        buildServerUri: 'http://127.0.0.1:1111',
+        serverId: 'some-server-id',
+    });
+
+    expect(subject.buildServerUri).toEqual('http://127.0.0.1:1111');
+    expect(subject.serverId).toEqual('some-server-id');
+});
+
+test('new Client(options) 3', () => {
     const subject = new Client({ buildServerUri });
 
-    expect(subject.options).toEqual({
-        buildServerUri: 'http://server',
-    });
+    expect(subject.buildServerUri).toEqual('http://server');
 });
 
 test('transform(transform, options)', () => {
-    expect.assertions(1);
-    const subject = new Client();
+    const subject = new Client({ buildServerUri });
     const transform = jest.fn();
     const options = jest.fn();
 
@@ -80,8 +94,7 @@ test('transform(transform, options)', () => {
 });
 
 test('plugin(transform, options)', () => {
-    expect.hasAssertions();
-    const subject = new Client();
+    const subject = new Client({ buildServerUri });
     const plugin = jest.fn();
     const options = jest.fn();
 
@@ -92,7 +105,7 @@ test('plugin(transform, options)', () => {
 
 test('uploadFeed() - files must be an array', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
 
     try {
         await client.uploadFeed();
@@ -103,7 +116,7 @@ test('uploadFeed() - files must be an array', async () => {
 
 test('uploadFeed() - files must contain at least 1 item', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
 
     try {
         await client.uploadFeed([]);
@@ -114,7 +127,18 @@ test('uploadFeed() - files must contain at least 1 item', async () => {
 
 test('uploadFeed() - files array must only contain strings', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
+
+    try {
+        await client.uploadFeed([1, true]);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('uploadFeed() - files array must only contain strings', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
 
     try {
         await client.uploadFeed([1, true]);
@@ -125,7 +149,7 @@ test('uploadFeed() - files array must only contain strings', async () => {
 
 test('uploadFeed() - files array must contain .css or .js filenames', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
 
     try {
         await client.uploadFeed(['one', 'two']);
@@ -142,7 +166,7 @@ test('uploadFeed(files) - request error', async () => {
     Client = require('../../');
     const fakeFiles = ['first.js'];
     const fakeOptions = {};
-    const client = new Client();
+    const client = new Client({ buildServerUri });
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
@@ -156,7 +180,7 @@ test('createRemoteBundle(sources) - request error', async () => {
     jest.doMock('asset-pipe-js-writer', () => createJsWriterMock());
     Client = require('../../');
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
-    const client = new Client();
+    const client = new Client({ buildServerUri });
 
     const result = client.createRemoteBundle(fakeSources, 'js');
 
@@ -165,7 +189,7 @@ test('createRemoteBundle(sources) - request error', async () => {
 
 test('createRemoteBundle() - missing source argument', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
     try {
         await client.createRemoteBundle();
     } catch (err) {
@@ -175,7 +199,7 @@ test('createRemoteBundle() - missing source argument', async () => {
 
 test('createRemoteBundle(sources) - invalid source argument', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
     try {
         await client.createRemoteBundle('asd');
     } catch (err) {
@@ -185,7 +209,7 @@ test('createRemoteBundle(sources) - invalid source argument', async () => {
 
 test('createRemoteBundle(sources) - source argument missing .json ext.', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
     try {
         await client.createRemoteBundle(['a1c12a45ca1ac1ca1cc1ac1ca1']);
     } catch (err) {
@@ -195,7 +219,7 @@ test('createRemoteBundle(sources) - source argument missing .json ext.', async (
 
 test('createRemoteBundle(sources) - missing type', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
     try {
         await client.createRemoteBundle(fakeSources);
@@ -206,7 +230,7 @@ test('createRemoteBundle(sources) - missing type', async () => {
 
 test('createRemoteBundle(sources) - invalid type', async () => {
     expect.assertions(1);
-    const client = new Client();
+    const client = new Client({ buildServerUri });
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
     try {
         await client.createRemoteBundle(fakeSources, 'fake');

@@ -63,6 +63,9 @@
     "readme": "projectz compile",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
+  "engines": {
+    "node": ">=8.9"
+  },
   "jest": {
     "clearMocks": true,
     "coverageThreshold": {

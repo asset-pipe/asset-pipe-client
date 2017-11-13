@@ -48,6 +48,7 @@ Read an [CommonJS module][commonjs] entry point and upload it as an asset-feed t
 const Client = require('asset-pipe-client');
 
 const client = new Client({
+    serverId: 'my-app-1',
     buildServerUri: 'http://127.0.0.1:7100',
 });
 
@@ -90,6 +91,7 @@ Build a javascript bundle out of two asset feeds:
 ```js
 const Client = require('asset-pipe-client');
 const client = new Client({
+    serverId: 'my-app-2',
     buildServerUri: 'http://127.0.0.1:7100',
 });
 
@@ -131,7 +133,7 @@ bundle.createRemoteBundle([
 
 ## API
 
-Under the hood, when working with javascript, the [asset-pipe][asset-pipe] project builds on [browserify][Browserify]. 
+Under the hood, when working with javascript, the [asset-pipe][asset-pipe] project builds on [browserify][Browserify].
 Multiple methods in this module are therefor underlaying Browserify methods where all features found in Browserify can
 be used. Such methods will in this documentation point to the related documentation in Browserify.
 
@@ -143,7 +145,8 @@ This module has the following API:
 
 Supported arguments are:
 
- * `options.buildServerUri` - URI to the [asset-pipe-build-server][asset-pipe-build-server]
+ * `options.buildServerUri` - Required URI to the [asset-pipe-build-server][asset-pipe-build-server]
+ * `options.serverId` - An optional unique name to identify the deployed server (required for runtime optimistic bundling)
 
 ### transform()
 
