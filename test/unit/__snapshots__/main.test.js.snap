@@ -10,12 +10,11 @@ exports[`createRemoteBundle(sources) - missing type 1`] = `[AssertionError [ERR_
 
 exports[`createRemoteBundle(sources) - source argument missing .json ext. 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'sources' to end with .json. Instead got a1c12a45ca1ac1ca1cc1ac1ca1]`;
 
-exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `
-[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js 
-                or ALL items in array 'files' to end with .css, got one,two]
-`;
+exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js or ALL items in array 'files' to end with .css, got one, two]`;
 
 exports[`uploadFeed() - files array must only contain strings 1`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
+
+exports[`uploadFeed() - files array must only contain strings 2`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
 
 exports[`uploadFeed() - files must be an array 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' to be an array, instead got undefined]`;
 

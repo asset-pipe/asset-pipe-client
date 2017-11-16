@@ -88,6 +88,33 @@ test('uploadFeed(files, options) - js', async () => {
     await closeServer(server);
 });
 
+test('uploadFeed(files, options) - js - with serverId', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/feed/js',
+            cb(req, res) {
+                res.send({
+                    message: `Success! ${req.headers['origin-server-id']}`,
+                });
+            },
+        },
+    ]);
+    const fakeFiles = ['first.js', 'second.js'];
+    const fakeOptions = {};
+    const serverId = `some-server-id-${Math.random()}`;
+    const client = new Client({
+        serverId,
+        buildServerUri: `http://127.0.0.1:${port}`,
+    });
+
+    const result = client.uploadFeed(fakeFiles, fakeOptions);
+
+    await expect(result).resolves.toEqual({ message: `Success! ${serverId}` });
+    await closeServer(server);
+});
+
 test('uploadFeed(files, options) - js - uses transforms', async () => {
     expect.assertions(1);
     const { server, port } = await createTestServer([
@@ -231,6 +258,46 @@ test('createRemoteBundle(sources) - 200', async () => {
     const result = client.createRemoteBundle(fakeSources, 'js');
 
     await expect(result).resolves.toEqual(fakeSources);
+    await closeServer(server);
+});
+
+test('createRemoteBundle(sources) - 200 - with serverId', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/bundle/js',
+            cb: (req, res) => res.send(req.headers['origin-server-id']),
+        },
+    ]);
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
+    const serverId = `anather-server-id-${Math.random()}`;
+    const client = new Client({
+        serverId,
+        buildServerUri: `http://127.0.0.1:${port}`,
+    });
+    const result = client.createRemoteBundle(fakeSources, 'js');
+
+    await expect(result).resolves.toEqual(serverId);
+    await closeServer(server);
+});
+
+test('createRemoteBundle(sources) - 200 - without serverId', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/bundle/js',
+            cb: (req, res) => res.send(`${req.headers['origin-server-id']}`),
+        },
+    ]);
+    const fakeSources = ['a12das3d.json', '12da321fd.json'];
+    const client = new Client({
+        buildServerUri: `http://127.0.0.1:${port}`,
+    });
+    const result = client.createRemoteBundle(fakeSources, 'js');
+
+    await expect(result).resolves.toEqual('undefined');
     await closeServer(server);
 });
 
