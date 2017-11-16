@@ -1,6 +1,6 @@
 <!-- TITLE/ -->
 
-<h1>asset-pipe-client</h1>
+<h1>@asset-pipe/client</h1>
 
 <!-- /TITLE -->
 
@@ -8,7 +8,7 @@
 <!-- BADGES/ -->
 
 <span class="badge-travisci"><a href="http://travis-ci.org/asset-pipe/asset-pipe-client" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/asset-pipe/asset-pipe-client/master.svg" alt="Travis CI Build Status" /></a></span>
-<span class="badge-npmversion"><a href="https://npmjs.org/package/asset-pipe-client" title="View this project on NPM"><img src="https://img.shields.io/npm/v/asset-pipe-client.svg" alt="NPM version" /></a></span>
+<span class="badge-npmversion"><a href="https://npmjs.org/package/@asset-pipe/client" title="View this project on NPM"><img src="https://img.shields.io/npm/v/@asset-pipe/client.svg" alt="NPM version" /></a></span>
 <span class="badge-daviddm"><a href="https://david-dm.org/asset-pipe/asset-pipe-client" title="View the status of this project's dependencies on DavidDM"><img src="https://img.shields.io/david/asset-pipe/asset-pipe-client.svg" alt="Dependency Status" /></a></span>
 <span class="badge-daviddmdev"><a href="https://david-dm.org/asset-pipe/asset-pipe-client#info=devDependencies" title="View the status of this project's development dependencies on DavidDM"><img src="https://img.shields.io/david/dev/asset-pipe/asset-pipe-client.svg" alt="Dev Dependency Status" /></a></span>
 
@@ -36,7 +36,7 @@ This client helps with remotely triggering these steps in the [asset-pipe-build-
 ## Installation
 
 ```bash
-$ npm install asset-pipe-client
+$ npm install @asset-pipe/client
 ```
 
 ## Example I
@@ -45,7 +45,7 @@ Read an [CommonJS module][commonjs] entry point and upload it as an asset-feed t
 [asset-pipe-build-server][asset-pipe-build-server]:
 
 ```js
-const Client = require('asset-pipe-client');
+const Client = require('@asset-pipe/client');
 
 const client = new Client({
     serverId: 'my-app-1',
@@ -68,7 +68,7 @@ Read a CSS file entry point and upload it as an asset-feed to the
 [asset-pipe-build-server][asset-pipe-build-server]:
 
 ```js
-const Client = require('asset-pipe-client');
+const Client = require('@asset-pipe/client');
 
 const client = new Client({
     buildServerUri: 'http://127.0.0.1:7100',
@@ -89,7 +89,7 @@ client.uploadFeed(['/path/to/styles.css'])
 Build a javascript bundle out of two asset feeds:
 
 ```js
-const Client = require('asset-pipe-client');
+const Client = require('@asset-pipe/client');
 const client = new Client({
     serverId: 'my-app-2',
     buildServerUri: 'http://127.0.0.1:7100',
@@ -113,7 +113,7 @@ bundle.createRemoteBundle([
 Build a CSS bundle out of two asset feeds:
 
 ```js
-const Client = require('asset-pipe-client');
+const Client = require('@asset-pipe/client');
 const client = new Client({
     buildServerUri: 'http://127.0.0.1:7100',
 });
@@ -182,7 +182,7 @@ As an example, here is how Babel is applied:
 
 ```js
 const babelify = require('babelify');
-const Client = require('asset-pipe-client');
+const Client = require('@asset-pipe/client');
 
 const client = new Client({
     files: ['path/to/myES6FrontendCode.js']
