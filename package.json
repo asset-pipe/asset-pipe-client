@@ -1,5 +1,5 @@
 {
-  "name": "asset-pipe-client",
+  "name": "@asset-pipe/client",
   "version": "0.0.0-development",
   "author": "Trygve Lie <post@trygve-lie.com>",
   "files": [
