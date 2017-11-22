@@ -162,7 +162,7 @@ test('uploadFeed(files) - request error', async () => {
     expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
-    jest.doMock('asset-pipe-js-writer', () => createJsWriterMock());
+    jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
     Client = require('../../');
     const fakeFiles = ['first.js'];
     const fakeOptions = {};
@@ -177,7 +177,7 @@ test('createRemoteBundle(sources) - request error', async () => {
     expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
-    jest.doMock('asset-pipe-js-writer', () => createJsWriterMock());
+    jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
     Client = require('../../');
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
     const client = new Client({ buildServerUri });

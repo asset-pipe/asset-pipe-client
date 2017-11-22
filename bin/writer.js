@@ -1,6 +1,6 @@
 'use strict';
 
-const jsWriter = require('asset-pipe-js-writer');
+const jsWriter = require('@asset-pipe/js-writer');
 const JSONStream = require('JSONStream');
 const fs = require('fs');
 

@@ -13,7 +13,7 @@ function closeServer(server) {
     });
 }
 
-jest.mock('asset-pipe-js-writer', () => {
+jest.mock('@asset-pipe/js-writer', () => {
     const { Readable } = require('stream');
     mockWriter = jest.fn(() => ({
         plugin: mockPlugin,
@@ -34,7 +34,7 @@ jest.mock('asset-pipe-js-writer', () => {
     return mockWriter;
 });
 
-jest.mock('asset-pipe-css-writer', () => {
+jest.mock('@asset-pipe/css-writer', () => {
     const { Readable } = require('stream');
     const items = [{}, {}, {}, {}];
     const cssWriter = new Readable({
