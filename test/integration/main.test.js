@@ -37,15 +37,19 @@ jest.mock('@asset-pipe/js-writer', () => {
 jest.mock('@asset-pipe/css-writer', () => {
     const { Readable } = require('stream');
     const items = [{}, {}, {}, {}];
-    const cssWriter = new Readable({
-        objectMode: true,
-        read() {
-            if (!items.length) {
-                return this.push(null);
-            }
-            this.push(items.shift());
+    const cssWriter = {
+        bundle() {
+            return new Readable({
+                objectMode: true,
+                read() {
+                    if (!items.length) {
+                        return this.push(null);
+                    }
+                    this.push(items.shift());
+                },
+            });
         },
-    });
+    };
     return jest.fn(() => cssWriter);
 });
 
