@@ -202,7 +202,7 @@ test('uploadFeed(files) - 400', async () => {
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
-    await expect(result).rejects.toEqual(new Error('Bad request!'));
+    await expect(result).rejects.toThrow('Bad request!');
     await closeServer(server);
 });
 
@@ -221,10 +221,8 @@ test('uploadFeed(files) - other status codes', async () => {
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
-    await expect(result).rejects.toEqual(
-        new Error(
-            'Asset build server responded with unknown error. Http status 300'
-        )
+    await expect(result).rejects.toThrow(
+        'Asset build server responded with unknown error. Http status 300'
     );
     await closeServer(server);
 });
@@ -355,7 +353,7 @@ test('createRemoteBundle(sources) - 400', async () => {
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources, 'js');
 
-    await expect(result).rejects.toEqual(new Error('Bad request'));
+    await expect(result).rejects.toThrow('Bad request');
     await closeServer(server);
 });
 
@@ -366,7 +364,7 @@ test('createRemoteBundle(sources) - other status codes', async () => {
             verb: 'post',
             path: '/bundle/js',
             cb: (req, res) =>
-                res.status(420).send({ message: 'Its that time again' }),
+                res.status(420).send({ message: "It's that time again" }),
         },
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
@@ -374,10 +372,8 @@ test('createRemoteBundle(sources) - other status codes', async () => {
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.createRemoteBundle(fakeSources, 'js');
 
-    await expect(result).rejects.toEqual(
-        new Error(
-            'Asset build server responded with unknown error. Http status 420'
-        )
+    await expect(result).rejects.toThrow(
+        'Asset build server responded with unknown error. Http status 420. Original message: "It\'s that time again".'
     );
     await closeServer(server);
 });
