@@ -238,3 +238,174 @@ test('createRemoteBundle(sources) - invalid type', async () => {
         expect(err).toMatchSnapshot();
     }
 });
+
+test('publishAssets(tag, entrypoints) - tag must be provided', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+
+    try {
+        await client.publishAssets();
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('publishAssets(tag, entrypoints) - tag must be a string', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+
+    try {
+        await client.publishAssets(1);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('publishAssets(tag, entrypoints) - files must be an array', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+
+    try {
+        await client.publishAssets('podlet');
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('publishAssets(tag, entrypoints) - files must contain at least 1 item', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+
+    try {
+        await client.publishAssets('podlet', []);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('publishAssets(tag, entrypoints) - files array must only contain strings', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+
+    try {
+        await client.publishAssets('podlet', [1, true]);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('publishAssets(tag, entrypoints) - files array must contain .css or .js filenames', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+
+    try {
+        await client.publishAssets('podlet', ['one', 'two']);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('publishAssets(tag, entrypoints) - request error', async () => {
+    expect.assertions(1);
+    jest.resetModules();
+    jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
+    jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
+    Client = require('../../');
+    const client = new Client({ buildServerUri });
+
+    const result = client.publishAssets('podlet', ['first.js'], {});
+
+    await expect(result).rejects.toEqual(new Error('Fake error!'));
+});
+
+test('publishInstructions(tag, type, data) - request error', async () => {
+    expect.assertions(1);
+    jest.resetModules();
+    jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
+    jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
+    Client = require('../../');
+
+    const client = new Client({ buildServerUri });
+    const result = client.publishInstructions('layout', 'js', [
+        'podlet1',
+        'podlet2',
+    ]);
+
+    await expect(result).rejects.toEqual(new Error('Fake error!'));
+});
+
+test('publishInstructions(tag, type, data) - missing arguments', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    try {
+        await client.publishInstructions();
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('publishInstructions(tag, type, data) - invalid tag argument', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    try {
+        await client.publishInstructions(1, 'js', ['podlet1', 'podlet2']);
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('publishInstructions(tag, type, data) - empty data', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    try {
+        await client.publishInstructions('layout', 'js');
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('publishInstructions(tag, type, data) - data not an array', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    try {
+        await client.publishInstructions('layout', 'js', {});
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('publishInstructions(tag, type, data) - bad data in array', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    try {
+        await client.publishInstructions('layout', 'js', [1, 2]);
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('publishInstructions(tag, type, data) - missing type', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    try {
+        await client.publishInstructions('layout', null, [
+            'podlet1',
+            'podlet2',
+        ]);
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});
+
+test('publishInstructions(tag, type, data) - invalid type', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    try {
+        await client.publishInstructions('layout', 'fake', [
+            'podlet1',
+            'podlet2',
+        ]);
+    } catch (err) {
+        expect(err).toMatchSnapshot();
+    }
+});

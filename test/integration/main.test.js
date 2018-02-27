@@ -36,9 +36,9 @@ jest.mock('@asset-pipe/js-writer', () => {
 
 jest.mock('@asset-pipe/css-writer', () => {
     const { Readable } = require('stream');
-    const items = [{}, {}, {}, {}];
     const cssWriter = {
         bundle() {
+            const items = [{}, {}, {}, {}];
             return new Readable({
                 objectMode: true,
                 read() {
@@ -375,5 +375,218 @@ test('createRemoteBundle(sources) - other status codes', async () => {
     await expect(result).rejects.toThrow(
         'Asset build server responded with unknown error. Http status 420. Original message: "It\'s that time again".'
     );
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - 400 error', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.status(400).send({ message: 'Bad request' });
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const result = client.publishAssets('podlet1', ['first.js', 'second.js']);
+
+    await expect(result).rejects.toEqual(new Error('Bad request'));
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - 500 error', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.status(500).send({ message: 'Server error' });
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const result = client.publishAssets('podlet1', ['first.js', 'second.js']);
+
+    await expect(result).rejects.toMatchSnapshot();
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - js', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const result = await client.publishAssets('podlet1', [
+        'first.js',
+        'second.js',
+    ]);
+
+    expect(result).toMatchSnapshot();
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - uses plugins', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const fakePlugin = { _id: 10 };
+    const fakePluginOptions = { _id: 20 };
+    client.plugin(fakePlugin, fakePluginOptions);
+
+    await client.publishAssets('podlet1', ['first.js', 'second.js']);
+
+    expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - uses transforms', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const fakeTransform = { _id: 30 };
+    const fakeTransformOptions = { _id: 40 };
+    client.transform(fakeTransform, fakeTransformOptions);
+
+    await client.publishAssets('podlet1', ['first.js', 'second.js']);
+
+    expect(mockTransform.mock.calls[0]).toEqual([
+        fakeTransform,
+        fakeTransformOptions,
+    ]);
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - css', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const result = await client.publishAssets('podlet1', [
+        'first.css',
+        'second.css',
+    ]);
+
+    expect(result).toMatchSnapshot();
+    await closeServer(server);
+});
+
+test('publishInstructions(tag, type, data) - js', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.send(req.body),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const result = await client.publishInstructions('layout', 'js', [
+        'a12das3d.json',
+        '12da321fd.json',
+    ]);
+
+    expect(result).toMatchSnapshot();
+
+    await closeServer(server);
+});
+
+test('publishInstructions(tag, type, data) - css', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.send(req.body),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const result = await client.publishInstructions('layout', 'css', [
+        'a12das3d.json',
+        '12da321fd.json',
+    ]);
+
+    expect(result).toMatchSnapshot();
+
+    await closeServer(server);
+});
+
+test('publishInstructions(tag, type, data) - 400', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.status(400).send({ message: 'Bad request' }),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const result = client.publishInstructions('layout', 'css', [
+        'a12das3d.json',
+        '12da321fd.json',
+    ]);
+
+    await expect(result).rejects.toEqual(new Error('Bad request'));
+
+    await closeServer(server);
+});
+
+test('publishInstructions(tag, type, data) - 500', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.status(500).send({ message: 'Server error' }),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const result = client.publishInstructions('layout', 'css', [
+        'a12das3d.json',
+        '12da321fd.json',
+    ]);
+
+    await expect(result).rejects.toMatchSnapshot();
+
     await closeServer(server);
 });

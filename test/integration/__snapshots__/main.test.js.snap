@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`publishAssets(tag, files, options) - 500 error 1`] = `[Error: Asset build server responded with unknown error. Http status 500]`;
+
+exports[`publishAssets(tag, files, options) - css 1`] = `
+Object {
+  "data": Array [
+    Object {},
+    Object {},
+    Object {},
+    Object {},
+  ],
+  "tag": "podlet1",
+  "type": "css",
+}
+`;
+
+exports[`publishAssets(tag, files, options) - js 1`] = `
+Object {
+  "data": Array [
+    Object {},
+    Object {},
+    Object {},
+    Object {},
+  ],
+  "tag": "podlet1",
+  "type": "js",
+}
+`;
+
+exports[`publishInstructions(tag, type, data) - 500 1`] = `[Error: Asset build server responded with unknown error. Http status 500. Original message: "Server error".]`;
+
+exports[`publishInstructions(tag, type, data) - css 1`] = `
+Object {
+  "data": Array [
+    "a12das3d.json",
+    "12da321fd.json",
+  ],
+  "tag": "layout",
+  "type": "css",
+}
+`;
+
+exports[`publishInstructions(tag, type, data) - js 1`] = `
+Object {
+  "data": Array [
+    "a12das3d.json",
+    "12da321fd.json",
+  ],
+  "tag": "layout",
+  "type": "js",
+}
+`;

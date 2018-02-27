@@ -10,6 +10,32 @@ exports[`createRemoteBundle(sources) - missing type 1`] = `[AssertionError [ERR_
 
 exports[`createRemoteBundle(sources) - source argument missing .json ext. 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'sources' to end with .json. Instead got a1c12a45ca1ac1ca1cc1ac1ca1]`;
 
+exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js filenames 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js or ALL items in array 'files' to end with .css, got one, two]`;
+
+exports[`publishAssets(tag, entrypoints) - files array must only contain strings 1`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
+
+exports[`publishAssets(tag, entrypoints) - files must be an array 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' to be an array, instead got undefined]`;
+
+exports[`publishAssets(tag, entrypoints) - files must contain at least 1 item 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' array to contain at least 1 item]`;
+
+exports[`publishAssets(tag, entrypoints) - tag must be a string 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got 1]`;
+
+exports[`publishAssets(tag, entrypoints) - tag must be provided 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got undefined]`;
+
+exports[`publishInstructions(tag, type, data) - bad data in array 1`] = `[AssertionError [ERR_ASSERTION]: Expected all entries in array 'data' to be strings. Instead got 1,2]`;
+
+exports[`publishInstructions(tag, type, data) - data not an array 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'data' to be an array. Instead got object]`;
+
+exports[`publishInstructions(tag, type, data) - empty data 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'data' to be an array. Instead got undefined]`;
+
+exports[`publishInstructions(tag, type, data) - invalid tag argument 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got 1]`;
+
+exports[`publishInstructions(tag, type, data) - invalid type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'fake']`;
+
+exports[`publishInstructions(tag, type, data) - missing arguments 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got undefined]`;
+
+exports[`publishInstructions(tag, type, data) - missing type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'null']`;
+
 exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js or ALL items in array 'files' to end with .css, got one, two]`;
 
 exports[`uploadFeed() - files array must only contain strings 1`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
