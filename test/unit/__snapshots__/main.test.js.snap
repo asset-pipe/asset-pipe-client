@@ -10,31 +10,68 @@ exports[`createRemoteBundle(sources) - missing type 1`] = `[AssertionError [ERR_
 
 exports[`createRemoteBundle(sources) - source argument missing .json ext. 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'sources' to end with .json. Instead got a1c12a45ca1ac1ca1cc1ac1ca1]`;
 
-exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js filenames 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js or ALL items in array 'files' to end with .css, got one, two]`;
+exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js filenames 1`] = `
+[ValidationError: Invalid 'files' argument given when attempting to publish assets. [
+  "one",
+  "two"
+]
+[31m
+[1] "entrypoint filename" with value "one" fails to match the required pattern: /^[a-zA-Z0-9._-]+\\.(js|css)$/[0m]
+`;
 
-exports[`publishAssets(tag, entrypoints) - files array must only contain strings 1`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
+exports[`publishAssets(tag, entrypoints) - files array must only contain strings 1`] = `
+[ValidationError: Invalid 'files' argument given when attempting to publish assets. [
+  1,
+  true
+]
+[31m
+[1] "entrypoint filename" must be a string[0m]
+`;
 
-exports[`publishAssets(tag, entrypoints) - files must be an array 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' to be an array, instead got undefined]`;
+exports[`publishAssets(tag, entrypoints) - files must be an array 1`] = `[Error: Fake error!]`;
 
-exports[`publishAssets(tag, entrypoints) - files must contain at least 1 item 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' array to contain at least 1 item]`;
+exports[`publishAssets(tag, entrypoints) - files must contain at least 1 item 1`] = `
+[ValidationError: Invalid 'files' argument given when attempting to publish assets. []
+[31m
+[1] "entrypoint filenames" does not contain [entrypoint filename][0m]
+`;
 
-exports[`publishAssets(tag, entrypoints) - tag must be a string 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got 1]`;
+exports[`publishAssets(tag, entrypoints) - tag must be a string 1`] = `[ValidationError: Invalid 'tag' argument given when attempting to publish assets. "tag" must be a string]`;
 
-exports[`publishAssets(tag, entrypoints) - tag must be provided 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got undefined]`;
+exports[`publishAssets(tag, entrypoints) - tag must be provided 1`] = `[ValidationError: Invalid 'tag' argument given when attempting to publish assets. "tag" is required]`;
 
-exports[`publishInstructions(tag, type, data) - bad data in array 1`] = `[AssertionError [ERR_ASSERTION]: Expected all entries in array 'data' to be strings. Instead got 1,2]`;
+exports[`publishInstructions(tag, type, data) - bad data in array 1`] = `
+[ValidationError: Invalid 'data' argument given when attempting to publish instructions. [
+  1, [31m[1][0m
+  2
+]
+[31m
+[1] "0" must be a string[0m]
+`;
 
-exports[`publishInstructions(tag, type, data) - data not an array 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'data' to be an array. Instead got object]`;
+exports[`publishInstructions(tag, type, data) - data not an array 1`] = `
+[ValidationError: Invalid 'data' argument given when attempting to publish instructions. {
+  [41m"bundle instruction"[0m[31m [1]: -- missing --[0m
+}
+[31m
+[1] "bundle instruction" must be an array[0m]
+`;
 
-exports[`publishInstructions(tag, type, data) - empty data 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'data' to be an array. Instead got undefined]`;
+exports[`publishInstructions(tag, type, data) - empty data 1`] = `[ValidationError: Invalid 'data' argument given when attempting to publish instructions. "bundle instruction" is required]`;
 
-exports[`publishInstructions(tag, type, data) - invalid tag argument 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got 1]`;
+exports[`publishInstructions(tag, type, data) - invalid tag argument 1`] = `[ValidationError: Invalid 'tag' argument given when attempting to publish instructions. "tag" must be a string]`;
 
-exports[`publishInstructions(tag, type, data) - invalid type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'fake']`;
+exports[`publishInstructions(tag, type, data) - invalid type 1`] = `[ValidationError: Invalid 'type' argument given when attempting to publish instructions. "file type" must be one of [js, css]]`;
 
-exports[`publishInstructions(tag, type, data) - missing arguments 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'tag' to be a string, instead got undefined]`;
+exports[`publishInstructions(tag, type, data) - missing arguments 1`] = `[ValidationError: Invalid 'tag' argument given when attempting to publish instructions. "tag" is required]`;
 
-exports[`publishInstructions(tag, type, data) - missing type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'null']`;
+exports[`publishInstructions(tag, type, data) - missing type 1`] = `
+[ValidationError: Invalid 'type' argument given when attempting to publish instructions. {
+  [41m"file type"[0m[31m [1]: -- missing --[0m
+}
+[31m
+[1] "file type" must be one of [js, css][0m]
+`;
 
 exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js or ALL items in array 'files' to end with .css, got one, two]`;
 
