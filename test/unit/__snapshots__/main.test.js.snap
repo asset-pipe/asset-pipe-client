@@ -77,8 +77,6 @@ exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `[A
 
 exports[`uploadFeed() - files array must only contain strings 1`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
 
-exports[`uploadFeed() - files array must only contain strings 2`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
-
 exports[`uploadFeed() - files must be an array 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' to be an array, instead got undefined]`;
 
 exports[`uploadFeed() - files must contain at least 1 item 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' array to contain at least 1 item]`;
