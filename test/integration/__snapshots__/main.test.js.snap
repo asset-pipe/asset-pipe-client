@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`publishAssets(tag, files, options) - 500 error 1`] = `[Error: Asset build server responded with unknown error. Http status 500]`;
+exports[`publishAssets(tag, files, options) - 500 error 1`] = `[Error: Asset build server responded with an error. Original message: Server error.]`;
 
 exports[`publishAssets(tag, files, options) - css 1`] = `
 Object {
@@ -28,7 +28,7 @@ Object {
 }
 `;
 
-exports[`publishInstructions(tag, type, data) - 500 1`] = `[Error: Asset build server responded with unknown error. Http status 500. Original message: "Server error".]`;
+exports[`publishInstructions(tag, type, data) - 500 1`] = `[Error: Asset build server responded with an error. Original message: Server error.]`;
 
 exports[`publishInstructions(tag, type, data) - css 1`] = `
 Object {
