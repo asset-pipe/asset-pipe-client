@@ -11,7 +11,7 @@ exports[`createRemoteBundle(sources) - missing type 1`] = `[AssertionError [ERR_
 exports[`createRemoteBundle(sources) - source argument missing .json ext. 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'sources' to end with .json. Instead got a1c12a45ca1ac1ca1cc1ac1ca1]`;
 
 exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js filenames 1`] = `
-[ValidationError: Invalid 'files' argument given when attempting to publish assets. [
+[ValidationError: Invalid 'entrypoints' argument given when attempting to publish assets. [
   "one",
   "two"
 ]
@@ -20,7 +20,7 @@ exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js 
 `;
 
 exports[`publishAssets(tag, entrypoints) - files array must only contain strings 1`] = `
-[ValidationError: Invalid 'files' argument given when attempting to publish assets. [
+[ValidationError: Invalid 'entrypoints' argument given when attempting to publish assets. [
   1,
   true
 ]
@@ -31,7 +31,7 @@ exports[`publishAssets(tag, entrypoints) - files array must only contain strings
 exports[`publishAssets(tag, entrypoints) - files must be an array 1`] = `[Error: Fake error!]`;
 
 exports[`publishAssets(tag, entrypoints) - files must contain at least 1 item 1`] = `
-[ValidationError: Invalid 'files' argument given when attempting to publish assets. []
+[ValidationError: Invalid 'entrypoints' argument given when attempting to publish assets. []
 [31m
 [1] "entrypoint filenames" does not contain [entrypoint filename][0m]
 `;
