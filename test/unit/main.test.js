@@ -143,7 +143,7 @@ test('uploadFeed(files) - request error', async () => {
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
 
-    await expect(result).rejects.toEqual(new Error('Fake error!'));
+    await expect(result).rejects.toThrow('Fake error!');
 });
 
 test('createRemoteBundle(sources) - request error', async () => {
@@ -157,7 +157,7 @@ test('createRemoteBundle(sources) - request error', async () => {
 
     const result = client.createRemoteBundle(fakeSources, 'js');
 
-    await expect(result).rejects.toEqual(new Error('Fake error!'));
+    await expect(result).rejects.toThrow('Fake error!');
 });
 
 test('createRemoteBundle() - missing source argument', async () => {
@@ -259,7 +259,7 @@ test('publishAssets(tag, entrypoints) - request error', async () => {
 
     const result = client.publishAssets('podlet', ['first.js'], {});
 
-    await expect(result).rejects.toEqual(new Error('Fake error!'));
+    await expect(result).rejects.toThrow('Fake error!');
 });
 
 test('publishInstructions(tag, type, data) - request error', async () => {
@@ -275,7 +275,7 @@ test('publishInstructions(tag, type, data) - request error', async () => {
         'podlet2',
     ]);
 
-    await expect(result).rejects.toEqual(new Error('Fake error!'));
+    await expect(result).rejects.toThrow('Fake error!');
 });
 
 test('publishInstructions(tag, type, data) - missing arguments', async () => {
