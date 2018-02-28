@@ -138,10 +138,10 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
 
     await client.uploadFeed(fakeFiles, fakeOptions);
 
-    expect(mockTransform.mock.calls[0]).toEqual([
+    expect(mockTransform).toHaveBeenCalledWith(
         fakeTransform,
-        fakeTransformOptions,
-    ]);
+        fakeTransformOptions
+    );
     await closeServer(server);
 });
 
@@ -164,7 +164,7 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
 
     await client.uploadFeed(fakeFiles, fakeOptions);
 
-    expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
+    expect(mockPlugin).toHaveBeenCalledWith(fakePlugin, fakePluginOptions);
     await closeServer(server);
 });
 
@@ -456,7 +456,7 @@ test('publishAssets(tag, files, options) - uses plugins', async () => {
 
     await client.publishAssets('podlet1', ['first.js', 'second.js']);
 
-    expect(mockPlugin.mock.calls[0]).toEqual([fakePlugin, fakePluginOptions]);
+    expect(mockPlugin).toHaveBeenCalledWith(fakePlugin, fakePluginOptions);
     await closeServer(server);
 });
 
@@ -478,10 +478,10 @@ test('publishAssets(tag, files, options) - uses transforms', async () => {
 
     await client.publishAssets('podlet1', ['first.js', 'second.js']);
 
-    expect(mockTransform.mock.calls[0]).toEqual([
+    expect(mockTransform).toHaveBeenCalledWith(
         fakeTransform,
-        fakeTransformOptions,
-    ]);
+        fakeTransformOptions
+    );
     await closeServer(server);
 });
 
