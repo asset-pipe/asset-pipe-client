@@ -61,7 +61,7 @@ We might begin by first we publishing some bundling instructions. (Though we
 could just as easily publish assets first):
 
 ```js
-const { success } = await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2']);
+await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2']);
 ```
 
 At this point, the server will not have created any bundles as there are no
@@ -312,21 +312,20 @@ instructions are published (via `publishInstructions`) or assets are published
   the tag property given when publishing assets using the `publishAssets`
   method.
 
-`return` - `object` - `{success: true}` is returned when publishing has
-successfully completed.
+`return` - 204 No Content is returned when publishing has successfully completed.
 
 **Examples**
 
 JavaScript
 
 ```js
-const { success } = await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2']);
+await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2']);
 ```
 
 CSS
 
 ```js
-const { success } = await client.publishInstructions('layout', 'css', ['podlet1', 'podlet2']);
+await client.publishInstructions('layout', 'css', ['podlet1', 'podlet2']);
 ```
 
 ## Transpilers
