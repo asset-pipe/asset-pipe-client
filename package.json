@@ -108,5 +108,8 @@
       "daviddmdev"
     ]
   },
-  "maintainers": []
+  "maintainers": [],
+  "prettier": {
+    "singleQuote": true
+  }
 }
