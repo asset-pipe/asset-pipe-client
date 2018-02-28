@@ -16,7 +16,7 @@ exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js 
   "two"
 ]
 [31m
-[1] "entrypoint filename" with value "one" fails to match the required pattern: /^[a-zA-Z0-9._-]+\\.(js|css)$/[0m]
+[1] "entrypoint filename" with value "one" fails to match the required pattern: /^[a-zA-Z0-9\\/._-]+\\.(js|css)$/[0m]
 `;
 
 exports[`publishAssets(tag, entrypoints) - files array must only contain strings 1`] = `
