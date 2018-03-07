@@ -438,6 +438,79 @@ test('publishAssets(tag, files, options) - js', async () => {
     await closeServer(server);
 });
 
+test('publishAssets(tag, files, options) - js - minify options', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(req.query);
+            },
+        },
+    ]);
+    const client = new Client({
+        buildServerUri: `http://127.0.0.1:${port}`,
+        minify: true,
+        sourceMaps: true,
+    });
+
+    const result = await client.publishAssets('a', ['b.js']);
+    expect(result).toMatchSnapshot();
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - js - query params', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(req.query);
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const result = await Promise.all([
+        await client.publishAssets('a', ['b.js'], { minify: true }),
+        await client.publishAssets('a', ['b.js'], { minify: false }),
+        await client.publishAssets('a', ['b.js'], { sourceMaps: true }),
+        await client.publishAssets('a', ['b.js'], { sourceMaps: false }),
+        await client.publishAssets('a', ['b.js'], { minify: null }),
+        await client.publishAssets('a', ['b.js'], { sourceMaps: null }),
+    ]);
+
+    expect(result).toMatchSnapshot();
+    await closeServer(server);
+});
+
+test('publishAssets(tag, files, options) - js - query params overrides options', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(req.query);
+            },
+        },
+    ]);
+    const client = new Client({
+        buildServerUri: `http://127.0.0.1:${port}`,
+        minify: true,
+        sourceMaps: true,
+    });
+
+    const result = await client.publishAssets('a', ['b.js'], {
+        minify: false,
+        sourceMaps: false,
+    });
+    expect(result).toMatchSnapshot();
+    await closeServer(server);
+});
+
 test('publishAssets(tag, files, options) - uses plugins', async () => {
     expect.assertions(1);
     const { server, port } = await createTestServer([
@@ -522,6 +595,78 @@ test('publishInstructions(tag, type, data) - js', async () => {
         'a12das3d.json',
         '12da321fd.json',
     ]);
+
+    expect(result).toMatchSnapshot();
+
+    await closeServer(server);
+});
+
+test('publishInstructions(tag, type, data) - js - options', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.send(req.query),
+        },
+    ]);
+
+    const client = new Client({
+        buildServerUri: `http://127.0.0.1:${port}`,
+        minify: true,
+        sourceMaps: true,
+    });
+    const result = await client.publishInstructions('a', 'js', ['b']);
+
+    expect(result).toMatchSnapshot();
+
+    await closeServer(server);
+});
+
+test('publishInstructions(tag, type, data) - js - query params', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.send(req.query),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    const result = await Promise.all([
+        client.publishInstructions('a', 'js', ['b'], { minify: true }),
+        client.publishInstructions('a', 'js', ['b'], { minify: false }),
+        client.publishInstructions('a', 'js', ['b'], { sourceMaps: true }),
+        client.publishInstructions('a', 'js', ['b'], { sourceMaps: false }),
+        client.publishInstructions('a', 'js', ['b'], { minify: null }),
+        client.publishInstructions('a', 'js', ['b'], { sourceMaps: null }),
+    ]);
+
+    expect(result).toMatchSnapshot();
+
+    await closeServer(server);
+});
+
+test('publishInstructions(tag, type, data) - js - query params overrides options', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.send(req.query),
+        },
+    ]);
+
+    const client = new Client({
+        buildServerUri: `http://127.0.0.1:${port}`,
+        minify: true,
+        sourceMaps: true,
+    });
+    const result = await client.publishInstructions('a', 'js', ['b'], {
+        minify: false,
+        sourceMaps: false,
+    });
 
     expect(result).toMatchSnapshot();
 
