@@ -2,7 +2,7 @@
 
 let Client = require('../../');
 
-const buildServerUri = 'http://server';
+const buildServerUri = 'http://server.com:3000';
 
 function createRequestMock(error, response, body) {
     const { PassThrough } = require('stream');
@@ -80,7 +80,7 @@ test('new Client(options) 2', () => {
 test('new Client(options) 3', () => {
     const subject = new Client({ buildServerUri });
 
-    expect(subject.buildServerUri).toEqual('http://server');
+    expect(subject.buildServerUri).toEqual('http://server.com:3000');
 });
 
 test('transform(transform, options)', () => {

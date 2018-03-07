@@ -15,6 +15,30 @@ Object {
 }
 `;
 
+exports[`publishAssets(tag, files, options) - js - minify options 1`] = `
+Object {
+  "minify": "true",
+  "sourceMaps": "true",
+}
+`;
+
+exports[`publishAssets(tag, files, options) - js - query params 1`] = `
+Array [
+  Object {
+    "minify": "true",
+  },
+  Object {},
+  Object {
+    "sourceMaps": "true",
+  },
+  Object {},
+  Object {},
+  Object {},
+]
+`;
+
+exports[`publishAssets(tag, files, options) - js - query params overrides options 1`] = `Object {}`;
+
 exports[`publishAssets(tag, files, options) - js 1`] = `
 Object {
   "data": Array [
@@ -40,6 +64,30 @@ Object {
   "type": "css",
 }
 `;
+
+exports[`publishInstructions(tag, type, data) - js - options 1`] = `
+Object {
+  "minify": "true",
+  "sourceMaps": "true",
+}
+`;
+
+exports[`publishInstructions(tag, type, data) - js - query params 1`] = `
+Array [
+  Object {
+    "minify": "true",
+  },
+  Object {},
+  Object {
+    "sourceMaps": "true",
+  },
+  Object {},
+  Object {},
+  Object {},
+]
+`;
+
+exports[`publishInstructions(tag, type, data) - js - query params overrides options 1`] = `Object {}`;
 
 exports[`publishInstructions(tag, type, data) - js 1`] = `
 Object {
