@@ -239,6 +239,8 @@ Supported arguments are:
   [asset-pipe-build-server][asset-pipe-build-server]
 * `options.serverId` - An optional unique name to identify the deployed server
   (required for runtime optimistic bundling)
+* `options.minify` - Use minification (optimistic bundling only) `true|false` Not providing this option will result in server default being used.
+* `options.sourceMaps` - (experimental) Use sourceMaps (optimistic bundling only) `true|false` Not providing this option will result in server default being used.
 
 ### transform()
 
@@ -269,7 +271,7 @@ Creates an asset bundle on the
 * `feeds` - Array - List of asset-feed filenames.
 * `type` - string - Either 'js' or 'css'
 
-### publishAssets(tag, entrypoints)
+### publishAssets(tag, entrypoints, options)
 
 Publishes assets to the asset server for use in optimisitic bundling. Bundles
 will be created according to bundle instructions published using the
@@ -279,6 +281,7 @@ will be created according to bundle instructions published using the
   unique.
 * `entrypoints` - `Array` - Array of asset entrypoint filenames to be published
   to the asset server.
+* `options` - `object` - Bundling options. `{minify: true|false, sourceMaps: true|false}` Setting these options here will override the same options provided to the constructor
 
 `return` - `object` - An object with keys `id` (refering to the unique asset
 hash) and `uri` (referring to the location of the published asset on the
@@ -298,7 +301,15 @@ CSS
 const { uri, id } = await client.publishAssets('podlet1', ['/path/to/file.css']);
 ```
 
-### publishInstructions(tag, type, data)
+With minification
+
+```js
+const { uri, id } = await client.publishAssets('podlet1', ['/path/to/file.js'], {
+    minify: true,
+});
+```
+
+### publishInstructions(tag, type, data, options)
 
 Publishes bundling instructions to the asset server for use in optimisitic
 bundling. Bundles are generated as specified by the `data` array. Anytime new
@@ -311,6 +322,7 @@ instructions are published (via `publishInstructions`) or assets are published
 * `data` - `array` - Array of tags to bundle together. Each tag must refer to
   the tag property given when publishing assets using the `publishAssets`
   method.
+* `options` - `object` - Bundling options. `{minify: true|false, sourceMaps: true|false}` Setting these options here will override the same options provided to the constructor
 
 `return` - 204 No Content is returned when publishing has successfully completed.
 
@@ -326,6 +338,14 @@ CSS
 
 ```js
 await client.publishInstructions('layout', 'css', ['podlet1', 'podlet2']);
+```
+
+With minification
+
+```js
+await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2'], {
+    minify: true,
+});
 ```
 
 ## Transpilers
