@@ -348,6 +348,35 @@ await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2'], {
 });
 ```
 
+### bundleURL(feedHashes, options)
+
+Calculates a bundle url string based on a given array of hashes which are asset feed content hashes. Each time an asset feed is published using `client.publishAssets` the resolved object will contain an `id` property which is the hash of the feed content and can be used with this method.
+
+Calculation is done by sha256 hashing together the given `hashes` and dropping the resulting hash into a url template.
+
+As such, this method does not perform any requests to the server and therefore cannot guarantee that the bundle exists on the server.
+
+* `hashes` - `string[]` - array of asset feed content hashes as returned by `client.publishAssets`
+* `options` - `object`
+  * `options.prefix` - `string` url prefix to use when building bundle url. Defaults to `${client.buildServerUri}/bundle/` which is the location on the asset server that a bundle can be located. Overwrite this if you use a CDN and need to point to that.
+  * `options.type` - `string` (`js`|`css`) - file type. Defaults to `js`
+
+`return` - `Promise<string>` - url for asset bundle on asset server.
+
+**Example**
+
+```js
+// publish instructions
+await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2']);
+
+// publish necessary assets
+const { uri, id1 } = await client.publishAssets('podlet1', ['/path/to/file.js']);
+const { uri, id2 } = await client.publishAssets('podlet2', ['/path/to/file.js']);
+
+// calculate the url of the finished bundle
+const url = await client.bundleURL([id1, id2]);
+```
+
 ## Transpilers
 
 Since [asset-pipe][asset-pipe] is built on [browserify][browserify] under the
