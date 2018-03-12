@@ -110,6 +110,13 @@ endpoint.
 GET http://<asset-server-url>/bundle/<hash>.js
 ```
 
+To make some of this a little easier, 2 helper methods exist on the client:
+
+* `bundleURL` - calculates the url location for a bundle based on a given array of asset hashes.
+* `bundlingComplete` - determines if bundling is complete for a given array of asset hashes.
+
+See API documentation below for more information.
+
 ## Installation
 
 ```bash
@@ -375,6 +382,34 @@ const { uri, id2 } = await client.publishAssets('podlet2', ['/path/to/file.js'])
 
 // calculate the url of the finished bundle
 const url = await client.bundleURL([id1, id2]);
+```
+
+### bundlingComplete(feedhashes, options)
+
+Calculates whether a bundling for the given `feedHashes` has been completed. The rules for this method are as follows:
+
+* If `feedHashes` is an empty array, this method resolves to `true` as no bundle needs to be built.
+* Otherwise, if `feedHashes` is not an empty array then a bundle url will be computed and a request made to check if the file exists on the server.
+
+* `hashes` - `string[]` - array of asset feed content hashes as returned by `client.publishAssets`
+* `options` - `object`
+  * `options.prefix` - `string` url prefix to use when building bundle url. Defaults to `${client.buildServerUri}/bundle/` which is the location on the asset server that a bundle can be located. Overwrite this if you use a CDN and need to point to that.
+  * `options.type` - `string` (`js`|`css`) - file type. Defaults to `js`
+
+`return` - `Promise<boolean>` - resolves to a boolean representing whether the bundling process for the given `feedHashes` is considered to be complete.
+
+**Example**
+
+```js
+// publish instructions
+await client.publishInstructions('layout', 'js', ['podlet1', 'podlet2']);
+
+// publish necessary assets
+const { uri, id1 } = await client.publishAssets('podlet1', ['/path/to/file.js']);
+const { uri, id2 } = await client.publishAssets('podlet2', ['/path/to/file.js']);
+
+// calculate the url of the finished bundle
+const isComplete = await client.bundlingComplete([id1, id2]);
 ```
 
 ## Transpilers

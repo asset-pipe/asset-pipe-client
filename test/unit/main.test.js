@@ -6,23 +6,26 @@ const buildServerUri = 'http://server.com:3000';
 
 function createRequestMock(error, response, body) {
     const { PassThrough } = require('stream');
-    return {
-        post(options, callback) {
-            const resolve = () => {
-                if (error) {
-                    return callback(error);
-                }
-                callback(null, response, body);
-            };
-            if (options.body) {
-                return resolve();
-            }
-            const destination = new PassThrough();
-            destination.on('data', () => {});
-            destination.on('end', resolve);
-            return destination;
-        },
+    const mockRequest = (url, callback) => {
+        if (error) return callback(error);
+        callback(null, response, body);
     };
+    mockRequest.post = (options, callback) => {
+        const resolve = () => {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, response, body);
+        };
+        if (options.body) {
+            return resolve();
+        }
+        const destination = new PassThrough();
+        destination.on('data', () => {});
+        destination.on('end', resolve);
+        return destination;
+    };
+    return mockRequest;
 }
 
 function createJsWriterMock() {
@@ -363,5 +366,50 @@ test('bundleURL(hashes, options) - js with prefix', async () => {
     const url = await client.bundleURL(['a', 'b'], { prefix: 'http://server' });
     expect(url).toBe(
         'http://server/fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603.js'
+    );
+});
+
+test('bundleURL(hashes, options) - empty array returns null', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    const url = await client.bundleURL([]);
+    expect(url).toBe(null);
+});
+
+test('bundlingComplete(hashes, options) - empty hashes array returns true', async () => {
+    expect.assertions(1);
+    const client = new Client({ buildServerUri });
+    const isComplete = await client.bundlingComplete([]);
+    expect(isComplete).toBe(true);
+});
+
+test('bundlingComplete(hashes, options) - empty hashes array returns true', async () => {
+    expect.assertions(1);
+    jest.resetModules();
+    jest.doMock('request', () => createRequestMock(null, { statusCode: 200 }));
+    Client = require('../../');
+    const client = new Client({ buildServerUri });
+    const isComplete = await client.bundlingComplete([]);
+    expect(isComplete).toBe(true);
+});
+
+test('bundlingComplete(hashes, options) - bundle does not exist returns false', async () => {
+    expect.assertions(1);
+    jest.resetModules();
+    jest.doMock('request', () => createRequestMock(null, { statusCode: 404 }));
+    Client = require('../../');
+    const client = new Client({ buildServerUri });
+    const isComplete = await client.bundlingComplete(['a12sd2s1a1a1323a']);
+    expect(isComplete).toBe(false);
+});
+
+test('bundlingComplete(hashes, options) - request throws', async () => {
+    expect.assertions(1);
+    jest.resetModules();
+    jest.doMock('request', () => createRequestMock(new Error('fake error')));
+    Client = require('../../');
+    const client = new Client({ buildServerUri });
+    await expect(client.bundlingComplete(['a12sd2s1a1a1323a'])).rejects.toEqual(
+        new Error('fake error')
     );
 });
