@@ -345,7 +345,7 @@ test('publishInstructions(tag, type, data) - invalid type', async () => {
 test('bundleURL(hashes, options) - js', async () => {
     expect.assertions(1);
     const client = new Client({ buildServerUri });
-    const url = await client.bundleURL(['a', 'b']);
+    const url = client.bundleURL(['a', 'b']);
     expect(url).toBe(
         'http://server.com:3000/bundle/fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603.js'
     );
@@ -354,7 +354,7 @@ test('bundleURL(hashes, options) - js', async () => {
 test('bundleURL(hashes, options) - css', async () => {
     expect.assertions(1);
     const client = new Client({ buildServerUri });
-    const url = await client.bundleURL(['a', 'b'], { type: 'css' });
+    const url = client.bundleURL(['a', 'b'], { type: 'css' });
     expect(url).toBe(
         'http://server.com:3000/bundle/fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603.css'
     );
@@ -363,7 +363,7 @@ test('bundleURL(hashes, options) - css', async () => {
 test('bundleURL(hashes, options) - js with prefix', async () => {
     expect.assertions(1);
     const client = new Client({ buildServerUri });
-    const url = await client.bundleURL(['a', 'b'], { prefix: 'http://server' });
+    const url = client.bundleURL(['a', 'b'], { prefix: 'http://server' });
     expect(url).toBe(
         'http://server/fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603.js'
     );
@@ -372,7 +372,7 @@ test('bundleURL(hashes, options) - js with prefix', async () => {
 test('bundleURL(hashes, options) - empty array returns null', async () => {
     expect.assertions(1);
     const client = new Client({ buildServerUri });
-    const url = await client.bundleURL([]);
+    const url = client.bundleURL([]);
     expect(url).toBe(null);
 });
 
