@@ -735,3 +735,84 @@ test('publishInstructions(tag, type, data) - 500', async () => {
 
     await closeServer(server);
 });
+
+test('sync() - 200', async () => {
+    expect.assertions(2);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'get',
+            path: '/sync',
+            cb: (req, res) =>
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    await client.sync();
+
+    expect(client.publicBundleUrl).toBe('a');
+    expect(client.publicFeedUrl).toBe('b');
+
+    await closeServer(server);
+});
+
+test('sync() - 500', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'get',
+            path: '/sync',
+            cb: (req, res) => res.status(200).send('undefined'),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    await expect(client.sync()).rejects.toThrowError();
+
+    await closeServer(server);
+});
+
+test('sync() - called when values already cached', async () => {
+    expect.assertions(2);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'get',
+            path: '/sync',
+            cb: (req, res) =>
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    client.publicBundleUrl = 'http://test';
+    client.publicFeedUrl = 'http://test';
+
+    await client.sync();
+
+    expect(client.publicBundleUrl).toBe('http://test');
+    expect(client.publicFeedUrl).toBe('http://test');
+
+    await closeServer(server);
+});
+
+test('sync() - called when publicFeedUrl already cached but not publicBundleUrl', async () => {
+    expect.assertions(2);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'get',
+            path: '/sync',
+            cb: (req, res) =>
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+    client.publicFeedUrl = 'http://test';
+
+    await client.sync();
+
+    expect(client.publicBundleUrl).toBe('a');
+    expect(client.publicFeedUrl).toBe('b');
+
+    await closeServer(server);
+});
