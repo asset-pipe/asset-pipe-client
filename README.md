@@ -278,6 +278,18 @@ Creates an asset bundle on the
 * `feeds` - Array - List of asset-feed filenames.
 * `type` - string - Either 'js' or 'css'
 
+### sync()
+
+Fetches centralised configuration information from the asset server.
+This should be called after creating a new client instance and before any calls to `.bundleURL()` or `.bundlingComplete()`
+
+**Example**
+
+```js
+const client = new Client(options);
+await client.sync();
+```
+
 ### publishAssets(tag, entrypoints, options)
 
 Publishes assets to the asset server for use in optimisitic bundling. Bundles
@@ -363,6 +375,8 @@ Calculation is done by sha256 hashing together the given `hashes` and dropping t
 
 As such, this method does not perform any requests to the server and therefore cannot guarantee that the bundle exists on the server.
 
+**Note:** You should call `await client.sync();` one time after creating the client instance, before calling `bundleURL` to ensure the client has update information about the public location of bundle files.
+
 * `hashes` - `string[]` - array of asset feed content hashes as returned by `client.publishAssets`
 * `options` - `object`
   * `options.prefix` - `string` url prefix to use when building bundle url. Defaults to `${client.buildServerUri}/bundle/` which is the location on the asset server that a bundle can be located. Overwrite this if you use a CDN and need to point to that.
@@ -387,6 +401,8 @@ const url = await client.bundleURL([id1, id2]);
 ### bundlingComplete(feedhashes, options)
 
 Calculates whether a bundling for the given `feedHashes` has been completed. The rules for this method are as follows:
+
+**Note:** You should call `await client.sync();` one time after creating the client instance, before calling `bundleURL` to ensure the client has update information about the public location of bundle files.
 
 * If `feedHashes` is an empty array, this method resolves to `true` as no bundle needs to be built.
 * Otherwise, if `feedHashes` is not an empty array then a bundle url will be computed and a request made to check if the file exists on the server.
