@@ -51,7 +51,7 @@
     "body-parser": "^1.18.2",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
-    "eslint": "^4.9.0",
+    "eslint": "^5.0.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "express": "^4.16.2",
