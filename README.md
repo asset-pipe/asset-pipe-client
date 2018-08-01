@@ -299,8 +299,7 @@ will be created according to bundle instructions published using the
 
 -   `tag` - `string` - Alphanumeric string identifying the publisher. Should be
     unique.
--   `entrypoints` - `Array` - Array of asset entrypoint filenames to be published
-    to the asset server.
+-   `entrypoints` - `Array|string` - Array of asset entrypoint filenames or single asset entrypoint filename string to be published to the asset server.
 -   `options` - `object` - Bundling options. `{minify: true|false, sourceMaps: true|false}` Setting these options here will override the same options provided to the constructor
 
 `return` - `object` - An object with keys `id` (refering to the unique asset
@@ -312,27 +311,21 @@ server).
 JavaScript
 
 ```js
-const { uri, id } = await client.publishAssets('podlet1', ['/path/to/file.js']);
+const { uri, id } = await client.publishAssets('podlet1', '/path/to/file.js');
 ```
 
 CSS
 
 ```js
-const { uri, id } = await client.publishAssets('podlet1', [
-    '/path/to/file.css'
-]);
+const { uri, id } = await client.publishAssets('podlet1', '/path/to/file.css');
 ```
 
 With minification
 
 ```js
-const { uri, id } = await client.publishAssets(
-    'podlet1',
-    ['/path/to/file.js'],
-    {
-        minify: true
-    }
-);
+const { uri, id } = await client.publishAssets('podlet1', '/path/to/file.js', {
+    minify: true
+});
 ```
 
 ### publishInstructions(tag, type, data, options)
