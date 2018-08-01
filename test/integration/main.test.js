@@ -816,3 +816,92 @@ test('sync() - called when publicFeedUrl already cached but not publicBundleUrl'
 
     await closeServer(server);
 });
+
+test('metrics - sync() endpoint', async done => {
+    expect.assertions(2);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'get',
+            path: '/sync',
+            cb: (req, res) =>
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const metrics = [];
+    client.metrics.on('data', metric => metrics.push(metric));
+
+    client.metrics.on('end', () => {
+        expect(metrics).toHaveLength(1);
+        expect(metrics[0].name).toBe('asset_server_sync_timer');
+        done();
+    });
+
+    await client.sync();
+
+    client.metrics.destroy();
+
+    await closeServer(server);
+});
+
+test('metrics - publishAssets() endpoint', async done => {
+    expect.assertions(2);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+    ]);
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const metrics = [];
+    client.metrics.on('data', metric => metrics.push(metric));
+
+    client.metrics.on('end', () => {
+        expect(metrics).toHaveLength(1);
+        expect(metrics[0].name).toBe('publish_assets_timer');
+        done();
+    });
+
+    await client.publishAssets('podlet1', ['first.js', 'second.js']);
+
+    client.metrics.destroy();
+
+    await closeServer(server);
+});
+
+test('metrics - publishInstructions() endpoint', async done => {
+    expect.assertions(2);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb: (req, res) => res.send(req.body),
+        },
+    ]);
+
+    const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
+
+    const metrics = [];
+    client.metrics.on('data', metric => metrics.push(metric));
+
+    client.metrics.on('end', () => {
+        expect(metrics).toHaveLength(1);
+        expect(metrics[0].name).toBe('publish_instructions_timer');
+        done();
+    });
+
+    await client.publishInstructions('layout', 'js', [
+        'a12das3d.json',
+        '12da321fd.json',
+    ]);
+
+    client.metrics.destroy();
+
+    await closeServer(server);
+});
