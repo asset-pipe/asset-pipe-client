@@ -248,6 +248,7 @@ Supported arguments are:
     (required for runtime optimistic bundling)
 -   `options.minify` - Use minification (optimistic bundling only) `true|false` Not providing this option will result in server default being used.
 -   `options.sourceMaps` - (experimental) Use sourceMaps (optimistic bundling only) `true|false` Not providing this option will result in server default being used.
+-   `options.logger` - An optional log4js compatible logger. See [abslog](https://www.npmjs.com/package/abslog) for more information
 
 ### transform()
 
