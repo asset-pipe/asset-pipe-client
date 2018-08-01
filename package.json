@@ -38,6 +38,7 @@
     "@asset-pipe/common": "^3.0.1",
     "@asset-pipe/css-writer": "^2.0.2",
     "@asset-pipe/js-writer": "^2.0.2",
+    "@metrics/client": "^1.0.0",
     "JSONStream": "^1.3.3",
     "boom": "^7.2.0",
     "commander": "^2.16.0",
