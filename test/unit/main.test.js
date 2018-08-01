@@ -220,7 +220,7 @@ test('publishAssets(tag, entrypoints) - tag must be a string', async () => {
     await expect(client.publishAssets(1)).rejects.toMatchSnapshot();
 });
 
-test('publishAssets(tag, entrypoints) - files must be an array', async () => {
+test('publishAssets(tag, entrypoints) - files must be provided', async () => {
     expect.assertions(1);
     const client = new Client({ buildServerUri });
 
@@ -235,12 +235,14 @@ test('publishAssets(tag, entrypoints) - files must contain at least 1 item', asy
 });
 
 test('publishAssets(tag, entrypoints) - files array must only contain strings', async () => {
-    expect.assertions(1);
+    expect.assertions(2);
     const client = new Client({ buildServerUri });
 
     await expect(
         client.publishAssets('podlet', [1, true])
     ).rejects.toMatchSnapshot();
+
+    await expect(client.publishAssets('podlet', 1)).rejects.toMatchSnapshot();
 });
 
 test('publishAssets(tag, entrypoints) - files array must contain .css or .js filenames', async () => {
