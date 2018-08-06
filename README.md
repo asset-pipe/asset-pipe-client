@@ -249,6 +249,10 @@ Supported arguments are:
 -   `options.minify` - Use minification (optimistic bundling only) `true|false` Not providing this option will result in server default being used.
 -   `options.sourceMaps` - (experimental) Use sourceMaps (optimistic bundling only) `true|false` Not providing this option will result in server default being used.
 -   `options.logger` - An optional log4js compatible logger. See [abslog](https://www.npmjs.com/package/abslog) for more information
+-   `options.development` - Puts the client in development mode. For use with the client.middleware() function (see below). Default `false`
+-   `options.publish` - Puts the client in publish mode. For use with the client.middleware() function (see below). Default `false`
+-   `options.js` - Optionally define the full path to a JavaScript file. For use with the client.middleware() function (see below)
+-   `options.css` - Optionally define the full path to a CSS style file. For use with the client.middleware() function (see below)
 
 ### transform()
 
@@ -434,6 +438,120 @@ const { uri, id2 } = await client.publishAssets('podlet2', [
 
 // calculate the url of the finished bundle
 const isComplete = await client.bundlingComplete([id1, id2]);
+```
+
+### .middleware()
+
+This method returns a connect middleware that can be used to both support assets in local development and to ensure assets are published before the request completes.
+
+When `.middleware()` is called and the client flag `development` is set to `true` then assets
+will be provided at `/js` and `/css` on your app. Additionally, file system watching will be enabled for JavaScript.
+
+**N.B.** You must provide `js` and/or `css` options to the constructor for this to work.
+
+_Example_
+
+```js
+const client = new Client({
+    ...
+    js: '/path/to/script.js',
+    css: '/path/to/style.js',
+    development: true,
+    ...
+})
+
+app.use(client.middleware())
+
+// curl http:<address>:<port>/js => bundled js scripts
+// curl http:<address>:<port>/css => bundled css styles
+```
+
+When `.middleware()` is called and the client flag `publish` is set to `true` then given assets will be uploaded to the defined asset server at `buildServerUrl`. The `.js()` and `.css()` methods (explained below) can be used to retrieve the asset id hashes that will allow you to refer to these uploaded assets on the asset server.
+
+**N.B.** You must provide `buildServerUri` as well as `js` and/or `css` options to the constructor for this to work.
+
+_Example_
+
+```js
+const client = new Client({
+    ...
+    buildServerUri: 'http://asset-server.com:1234',
+    js: '/path/to/script.js',
+    css: '/path/to/style.js',
+    publish: true,
+    ...
+})
+
+app.use(client.middleware())
+```
+
+### .js()
+
+Method for retrieving the id hash for JavaScript assets uploaded to an asset server
+
+```js
+const client = new Client({
+    ...
+    buildServerUri: 'http://asset-server.com:1234',
+    js: '/path/to/script.js',
+    css: '/path/to/style.js',
+    publish: true,
+    ...
+})
+
+client.js() // => null
+
+app.use(client.middleware());
+
+app.get('/', (req, res) => {
+    client.js() // a2b2ab2a2b2b3bab4ab4aa22babab2ba2
+})
+```
+
+### .css()
+
+Method for retrieving the id hash for CSS assets uploaded to an asset server
+
+```js
+const client = new Client({
+    ...
+    buildServerUri: 'http://asset-server.com:1234',
+    js: '/path/to/script.js',
+    css: '/path/to/style.js',
+    publish: true,
+    ...
+})
+
+client.css() // => null
+
+app.use(client.middleware());
+
+app.get('/', (req, res) => {
+    client.css() // b2b2ac2a2b4b3bab4ab2aa22babab2ba2
+})
+```
+
+### .ready()
+
+Method for waiting until assets have finished publishing to an asset server
+
+```js
+const client = new Client({
+    ...
+    buildServerUri: 'http://asset-server.com:1234',
+    js: '/path/to/script.js',
+    css: '/path/to/style.js',
+    publish: true,
+    ...
+})
+
+client.css() // => null
+
+client.middleware();
+await client.ready();
+
+client.js() // a2b2ab2a2b2b3bab4ab4aa22babab2ba2
+client.css() // b2b2ac2a2b4b3bab4ab2aa22babab2ba2
 ```
 
 ### .metrics
