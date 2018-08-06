@@ -251,6 +251,7 @@ Supported arguments are:
 -   `options.logger` - An optional log4js compatible logger. See [abslog](https://www.npmjs.com/package/abslog) for more information
 -   `options.development` - Puts the client in development mode. For use with the client.middleware() function (see below). Default `false`
 -   `options.publish` - Puts the client in publish mode. For use with the client.middleware() function (see below). Default `false`
+-   `options.tag` - Optionally define a tag to be used when publishing assets to an asset server. For use with the client.middleware() function (see below). Required when `publish` is `true`.
 -   `options.js` - Optionally define the full path to a JavaScript file. For use with the client.middleware() function (see below)
 -   `options.css` - Optionally define the full path to a CSS style file. For use with the client.middleware() function (see below)
 
@@ -476,6 +477,7 @@ _Example_
 const client = new Client({
     ...
     buildServerUri: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
     publish: true,
@@ -493,6 +495,7 @@ Method for retrieving the id hash for JavaScript assets uploaded to an asset ser
 const client = new Client({
     ...
     buildServerUri: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
     publish: true,
@@ -516,6 +519,7 @@ Method for retrieving the id hash for CSS assets uploaded to an asset server
 const client = new Client({
     ...
     buildServerUri: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
     publish: true,
@@ -539,6 +543,7 @@ Method for waiting until assets have finished publishing to an asset server
 const client = new Client({
     ...
     buildServerUri: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
     publish: true,
