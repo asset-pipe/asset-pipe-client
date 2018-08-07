@@ -28,25 +28,7 @@ function createTestServer(handlers) {
     });
 }
 
-test('middleware(), publish=false, development=false', async () => {
-    expect.assertions(3);
-    const client = new Client({
-        buildServerUri: `http://127.0.0.1:1337`,
-        tag: 'test',
-        js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
-        development: false,
-        publish: false,
-    });
-
-    client.middleware();
-
-    expect(await client.ready()).toBeTruthy();
-    expect(client.js()).toBeFalsy();
-    expect(client.css()).toBeFalsy();
-});
-
-test('middleware() publish=true, development=false', async () => {
+test('middleware() - publishing assets using middleware for readiness', async () => {
     expect.assertions(2);
     const { server, port } = await createTestServer([
         {
@@ -63,8 +45,6 @@ test('middleware() publish=true, development=false', async () => {
         tag: 'test',
         js: resolve(__dirname, '../assets/script.js'),
         css: resolve(__dirname, '../assets/style.css'),
-        development: false,
-        publish: true,
     });
 
     const app = express();
@@ -82,7 +62,35 @@ test('middleware() publish=true, development=false', async () => {
     await closeServer(server);
 });
 
-test('middleware() publish=false, development=true', async () => {
+test('middleware() - publishing assets using ready method for readiness', async () => {
+    expect.assertions(2);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify({ id: 'hash' }));
+            },
+        },
+    ]);
+
+    const client = new Client({
+        buildServerUri: `http://127.0.0.1:${port}`,
+        tag: 'test',
+        js: resolve(__dirname, '../assets/script.js'),
+        css: resolve(__dirname, '../assets/style.css'),
+    });
+
+    client.middleware();
+    await client.ready();
+
+    expect(client.js()).toBe('hash');
+    expect(client.css()).toBe('hash');
+
+    await closeServer(server);
+});
+
+test('middleware() development=true', async () => {
     expect.assertions(2);
 
     const client = new Client({
@@ -91,12 +99,12 @@ test('middleware() publish=false, development=true', async () => {
         js: resolve(__dirname, '../assets/script.js'),
         css: resolve(__dirname, '../assets/style.css'),
         development: true,
-        publish: false,
     });
 
     const app = express();
 
     app.use(client.middleware());
+    await client.ready();
 
     const { text: js } = await request(app).get('/js');
     const { text: css } = await request(app).get('/css');
@@ -105,9 +113,7 @@ test('middleware() publish=false, development=true', async () => {
     expect(css).toMatch('background-color');
 });
 
-test('middleware() publish=true, development=true', async () => {
-    expect.assertions(5);
-
+test('middleware() development=false, missing assets', async () => {
     const { server, port } = await createTestServer([
         {
             verb: 'post',
@@ -121,46 +127,7 @@ test('middleware() publish=true, development=true', async () => {
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         tag: 'test',
-        js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
-        development: true,
-        publish: true,
-    });
-
-    const app = express();
-
-    app.use(client.middleware());
-
-    expect(await client.ready()).toBeTruthy();
-    const { text: js } = await request(app).get('/js');
-    const { text: css } = await request(app).get('/css');
-
-    expect(js).toMatch('console.log');
-    expect(css).toMatch('background-color');
-    expect(client.js()).toBe('hash');
-    expect(client.css()).toBe('hash');
-
-    await closeServer(server);
-});
-
-test('middleware() publish=true, development=false, missing assets', async () => {
-    // expect.assertions(5);
-
-    const { server, port } = await createTestServer([
-        {
-            verb: 'post',
-            path: '/publish-assets',
-            cb(req, res) {
-                res.send(JSON.stringify({ id: 'hash' }));
-            },
-        },
-    ]);
-
-    const client = new Client({
-        buildServerUri: `http://127.0.0.1:${port}`,
-        tag: 'test',
-        development: true,
-        publish: true,
+        development: false,
     });
 
     client.middleware();
@@ -169,11 +136,12 @@ test('middleware() publish=true, development=false, missing assets', async () =>
 });
 
 test('middleware() plugins', async () => {
-    jest.resetModules();
     expect.assertions(2);
+    jest.resetModules();
     const mocks = {
         plugin: jest.fn(),
         transform: jest.fn(),
+        router: jest.fn(),
     };
     jest.doMock(
         '@asset-pipe/dev-middleware',
@@ -191,8 +159,7 @@ test('middleware() plugins', async () => {
         tag: 'test',
         js: resolve(__dirname, '../assets/script.js'),
         css: resolve(__dirname, '../assets/style.css'),
-        development: false,
-        publish: false,
+        development: true,
     });
 
     client.plugin('fake1', {});
@@ -202,6 +169,7 @@ test('middleware() plugins', async () => {
     client.transform('fake2', {});
 
     client.middleware();
+    await client.ready();
 
     expect(mocks.plugin).toHaveBeenCalledTimes(2);
     expect(mocks.transform).toHaveBeenCalledTimes(2);

@@ -250,7 +250,6 @@ Supported arguments are:
 -   `options.sourceMaps` - (experimental) Use sourceMaps (optimistic bundling only) `true|false` Not providing this option will result in server default being used.
 -   `options.logger` - An optional log4js compatible logger. See [abslog](https://www.npmjs.com/package/abslog) for more information
 -   `options.development` - Puts the client in development mode. For use with the client.middleware() function (see below). Default `false`
--   `options.publish` - Puts the client in publish mode. For use with the client.middleware() function (see below). Default `false`
 -   `options.tag` - Optionally define a tag to be used when publishing assets to an asset server. For use with the client.middleware() function (see below). Required when `publish` is `true`.
 -   `options.js` - Optionally define the full path to a JavaScript file. For use with the client.middleware() function (see below)
 -   `options.css` - Optionally define the full path to a CSS style file. For use with the client.middleware() function (see below)
@@ -467,7 +466,7 @@ app.use(client.middleware())
 // curl http:<address>:<port>/css => bundled css styles
 ```
 
-When `.middleware()` is called and the client flag `publish` is set to `true` then given assets will be uploaded to the defined asset server at `buildServerUrl`. The `.js()` and `.css()` methods (explained below) can be used to retrieve the asset id hashes that will allow you to refer to these uploaded assets on the asset server.
+When `.middleware()` is called and the client flag `development` is `false` then given assets will be uploaded to the defined asset server at `buildServerUrl`. The `.js()` and `.css()` methods (explained below) can be used to retrieve the asset id hashes that will allow you to refer to these uploaded assets on the asset server.
 
 **N.B.** You must provide `buildServerUri` as well as `js` and/or `css` options to the constructor for this to work.
 
@@ -480,7 +479,7 @@ const client = new Client({
     tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
-    publish: true,
+    development: false,
     ...
 })
 
@@ -498,7 +497,7 @@ const client = new Client({
     tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
-    publish: true,
+    development: false,
     ...
 })
 
@@ -522,7 +521,7 @@ const client = new Client({
     tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
-    publish: true,
+    development: false,
     ...
 })
 
@@ -546,7 +545,7 @@ const client = new Client({
     tag: 'uniqueLabel',
     js: '/path/to/script.js',
     css: '/path/to/style.js',
-    publish: true,
+    development: false,
     ...
 })
 
