@@ -43,6 +43,9 @@ test('middleware() - publishing assets using middleware for readiness', async ()
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         tag: 'test',
+    });
+
+    client.publish({
         js: resolve(__dirname, '../assets/script.js'),
         css: resolve(__dirname, '../assets/style.css'),
     });
@@ -77,6 +80,9 @@ test('middleware() - publishing assets using ready method for readiness', async 
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         tag: 'test',
+    });
+
+    client.publish({
         js: resolve(__dirname, '../assets/script.js'),
         css: resolve(__dirname, '../assets/style.css'),
     });
@@ -96,9 +102,12 @@ test('middleware() development=true', async () => {
     const client = new Client({
         buildServerUri: `http://127.0.0.1:1337`,
         tag: 'test',
+        development: true,
+    });
+
+    client.publish({
         js: resolve(__dirname, '../assets/script.js'),
         css: resolve(__dirname, '../assets/style.css'),
-        development: true,
     });
 
     const app = express();
@@ -157,9 +166,12 @@ test('middleware() plugins', async () => {
     const client = new ClientWithMocks({
         buildServerUri: `http://127.0.0.1:1337`,
         tag: 'test',
+        development: true,
+    });
+
+    client.publish({
         js: resolve(__dirname, '../assets/script.js'),
         css: resolve(__dirname, '../assets/style.css'),
-        development: true,
     });
 
     client.plugin('fake1', {});
