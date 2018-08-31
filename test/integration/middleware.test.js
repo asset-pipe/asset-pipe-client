@@ -164,7 +164,7 @@ test('middleware() plugins', async () => {
     const ClientWithMocks = require('../../lib/main');
 
     const client = new ClientWithMocks({
-        buildServerUri: `http://127.0.0.1:1337`,
+        server: `http://127.0.0.1:1337`,
         tag: 'test',
         development: true,
     });
