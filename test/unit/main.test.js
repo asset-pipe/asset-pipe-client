@@ -56,7 +56,7 @@ test('new Client(options) - should throw when missing buildServerUri option', ()
     expect(() => {
         // eslint-disable-next-line no-new
         new Client();
-    }).toThrowError('Expected "buildServerUri" to be a uri, got undefined');
+    }).toThrowError('Expected "server" to be a uri, got undefined');
 });
 
 test('new Client(options)', () => {
