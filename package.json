@@ -49,6 +49,7 @@
     "request": "^2.87.0"
   },
   "devDependencies": {
+    "@asset-pipe/server": "^5.10.0",
     "asset-pipe-test-es5a": "^1.0.0",
     "asset-pipe-test-es5b": "^1.0.0",
     "body-parser": "^1.18.3",

@@ -2,6 +2,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const { resolve } = require('path');
 
 let mockWriter;
 const mockPlugin = jest.fn();
@@ -904,4 +905,92 @@ test('metrics - publishInstructions() endpoint', async done => {
     client.metrics.destroy();
 
     await closeServer(server);
+});
+
+test('publish', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify({ id: '1adsa3d123as1a3ds123' }));
+            },
+        },
+    ]);
+    const client = new Client({
+        server: `http://127.0.0.1:${port}`,
+        tag: 'test',
+    });
+
+    const result = await client.publish({
+        js: resolve(__dirname, '../assets/script.js'),
+        css: resolve(__dirname, '../assets/style.css'),
+    });
+
+    await closeServer(server);
+
+    expect(result).toEqual({
+        css: '1adsa3d123as1a3ds123',
+        js: '1adsa3d123as1a3ds123',
+    });
+});
+
+test('bundle', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+    ]);
+    const client = new Client({
+        server: `http://127.0.0.1:${port}`,
+        tag: 'test',
+    });
+
+    const result = await client.bundle({ js: ['test'], css: ['test'] });
+    await closeServer(server);
+
+    expect(result).toEqual([
+        { data: ['test'], tag: 'test', type: 'js' },
+        { data: ['test'], tag: 'test', type: 'css' },
+    ]);
+});
+
+test('ready', async () => {
+    expect.assertions(1);
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+        {
+            verb: 'post',
+            path: '/publish-instructions',
+            cb(req, res) {
+                res.send(JSON.stringify(req.body));
+            },
+        },
+    ]);
+    const client = new Client({
+        server: `http://127.0.0.1:${port}`,
+        tag: 'test',
+    });
+
+    await client.publish({
+        js: resolve(__dirname, '../assets/script.js'),
+        css: resolve(__dirname, '../assets/style.css'),
+    });
+    await client.bundle({ js: ['test'], css: ['test'] });
+
+    await closeServer(server);
+
+    expect(client.ready()).resolves.toBe(true);
 });
