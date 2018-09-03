@@ -133,7 +133,7 @@ const Client = require('@asset-pipe/client');
 
 const client = new Client({
     serverId: 'my-app-1',
-    buildServerUri: 'http://127.0.0.1:7100'
+    server: 'http://127.0.0.1:7100'
 });
 
 client
@@ -156,7 +156,7 @@ Read a CSS file entry point and upload it as an asset-feed to the
 const Client = require('@asset-pipe/client');
 
 const client = new Client({
-    buildServerUri: 'http://127.0.0.1:7100'
+    server: 'http://127.0.0.1:7100'
 });
 
 client
@@ -178,7 +178,7 @@ Build a javascript bundle out of two asset feeds:
 const Client = require('@asset-pipe/client');
 const client = new Client({
     serverId: 'my-app-2',
-    buildServerUri: 'http://127.0.0.1:7100'
+    server: 'http://127.0.0.1:7100'
 });
 
 bundle
@@ -205,7 +205,7 @@ Build a CSS bundle out of two asset feeds:
 ```js
 const Client = require('@asset-pipe/client');
 const client = new Client({
-    buildServerUri: 'http://127.0.0.1:7100'
+    server: 'http://127.0.0.1:7100'
 });
 
 bundle
@@ -242,7 +242,7 @@ This module has the following API:
 
 Supported arguments are:
 
--   `options.buildServerUri` - Required URI to the
+-   `options.server` - Required URI to the
     [asset-pipe-build-server][asset-pipe-build-server]
 -   `options.serverId` - An optional unique name to identify the deployed server
     (required for runtime optimistic bundling)
@@ -383,7 +383,7 @@ As such, this method does not perform any requests to the server and therefore c
 
 -   `hashes` - `string[]` - array of asset feed content hashes as returned by `client.publishAssets`
 -   `options` - `object`
-    -   `options.prefix` - `string` url prefix to use when building bundle url. Defaults to `${client.buildServerUri}/bundle/` which is the location on the asset server that a bundle can be located. Overwrite this if you use a CDN and need to point to that.
+    -   `options.prefix` - `string` url prefix to use when building bundle url. Defaults to `${client.server}/bundle/` which is the location on the asset server that a bundle can be located. Overwrite this if you use a CDN and need to point to that.
     -   `options.type` - `string` (`js`|`css`) - file type. Defaults to `js`
 
 `return` - `Promise<string>` - url for asset bundle on asset server.
@@ -417,7 +417,7 @@ Calculates whether a bundling for the given `feedHashes` has been completed. The
 
 -   `hashes` - `string[]` - array of asset feed content hashes as returned by `client.publishAssets`
 -   `options` - `object`
-    -   `options.prefix` - `string` url prefix to use when building bundle url. Defaults to `${client.buildServerUri}/bundle/` which is the location on the asset server that a bundle can be located. Overwrite this if you use a CDN and need to point to that.
+    -   `options.prefix` - `string` url prefix to use when building bundle url. Defaults to `${client.server}/bundle/` which is the location on the asset server that a bundle can be located. Overwrite this if you use a CDN and need to point to that.
     -   `options.type` - `string` (`js`|`css`) - file type. Defaults to `js`
 
 `return` - `Promise<boolean>` - resolves to a boolean representing whether the bundling process for the given `feedHashes` is considered to be complete.
@@ -447,43 +447,50 @@ This method returns a connect middleware that can be used to both support assets
 When `.middleware()` is called and the client flag `development` is set to `true` then assets
 will be provided at `/js` and `/css` on your app. Additionally, file system watching will be enabled for JavaScript.
 
-**N.B.** You must provide `js` and/or `css` options to the constructor for this to work.
+**N.B.** You must call `.publish()` and provide `js` and/or `css` options for development mode to work.
 
 _Example_
 
 ```js
 const client = new Client({
     ...
-    js: '/path/to/script.js',
-    css: '/path/to/style.js',
     development: true,
     ...
-})
+});
 
-app.use(client.middleware())
+client.publish({
+    js: '/path/to/script.js',
+    css: '/path/to/style.js',
+});
+
+app.use(client.middleware());
 
 // curl http:<address>:<port>/js => bundled js scripts
 // curl http:<address>:<port>/css => bundled css styles
 ```
 
-When `.middleware()` is called and the client flag `development` is `false` then given assets will be uploaded to the defined asset server at `buildServerUrl`. The `.js()` and `.css()` methods (explained below) can be used to retrieve the asset id hashes that will allow you to refer to these uploaded assets on the asset server.
-
-**N.B.** You must provide `buildServerUri` as well as `js` and/or `css` options to the constructor for this to work.
+When `.middleware()` is called and the client flag `development` is `false` then the middleware will force requests to wait until `client.ready()` resolves to `true`. This will ensure that any publishing or bundling has completed before route handlers are invoked.
 
 _Example_
 
 ```js
 const client = new Client({
     ...
-    buildServerUri: 'http://asset-server.com:1234',
+    server: 'http://asset-server.com:1234',
     tag: 'uniqueLabel',
-    js: '/path/to/script.js',
-    css: '/path/to/style.js',
     development: false,
     ...
-})
+});
 
-app.use(client.middleware())
+client.publish({ ... });
+client.bundle({ ... });
+
+app.use(client.middleware());
+
+app.get('/', (req, res) => {
+    // publishing and bundling have completed before we get
+    // here
+})
 ```
 
 ### .js()
@@ -493,14 +500,13 @@ Method for retrieving the id hash for JavaScript assets uploaded to an asset ser
 ```js
 const client = new Client({
     ...
-    buildServerUri: 'http://asset-server.com:1234',
+    server: 'http://asset-server.com:1234',
     tag: 'uniqueLabel',
-    js: '/path/to/script.js',
-    css: '/path/to/style.js',
     development: false,
     ...
 })
 
+client.publish({ ... });
 client.js() // => null
 
 app.use(client.middleware());
@@ -517,14 +523,13 @@ Method for retrieving the id hash for CSS assets uploaded to an asset server
 ```js
 const client = new Client({
     ...
-    buildServerUri: 'http://asset-server.com:1234',
+    server: 'http://asset-server.com:1234',
     tag: 'uniqueLabel',
-    js: '/path/to/script.js',
-    css: '/path/to/style.js',
     development: false,
     ...
 })
 
+client.publish({ ... });
 client.css() // => null
 
 app.use(client.middleware());
@@ -536,26 +541,168 @@ app.get('/', (req, res) => {
 
 ### .ready()
 
-Method for waiting until assets have finished publishing to an asset server
+Method for waiting until assets have finished publishing to or bundling on an asset server.
 
 ```js
 const client = new Client({
     ...
-    buildServerUri: 'http://asset-server.com:1234',
+    server: 'http://asset-server.com:1234',
     tag: 'uniqueLabel',
-    js: '/path/to/script.js',
-    css: '/path/to/style.js',
     development: false,
     ...
-})
+});
+
+client.publish({ ... });
 
 client.css() // => null
 
-client.middleware();
 await client.ready();
 
 client.js() // a2b2ab2a2b2b3bab4ab4aa22babab2ba2
 client.css() // b2b2ac2a2b4b3bab4ab2aa22babab2ba2
+```
+
+### .publish()
+
+Method to publish JavaScript and/or CSS assets to an asset server. Returns a promise which resolves when publishing is done.
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel'
+});
+
+const { js, css } = await client.publish({
+    js: '/path/to/script.js',
+    css: '/path/to/styles.css'
+});
+// js => a2b2ab2a2b2b3bab4ab4aa22babab2ba2
+// css => b2b2ac2a2b4b3bab4ab2aa22babab2ba2
+```
+
+It is not necessary to wait for publish to complete. You can also call publish to kick off publishing and then wait for the `.ready()` method to resolve to know when publishing is complete.
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel'
+});
+
+client.publish({
+    js: '/path/to/script.js',
+    css: '/path/to/styles.css'
+});
+
+await client.ready();
+```
+
+If you use `.middleware()` in your connect based applications, waiting for publish completion will happen automatically.
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel'
+});
+
+client.publish({
+    js: '/path/to/script.js',
+    css: '/path/to/styles.css'
+});
+
+app.use(client.middleware());
+```
+
+### .bundle()
+
+Method to instruct an asset server to bundle JavaScript and/or CSS assets. Returns a promise which resolves when bundling is done.
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel'
+});
+
+await client.bundle({ js: ['tag1', 'tag2'], css: ['tag1', 'tag2'] });
+```
+
+It is not necessary to wait for bundle to complete. You can also call bundle to kick off bundling and then wait for the `.ready()` method to resolve to know when bundling is complete.
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel'
+});
+
+client.bundle({ js: ['tag1', 'tag2'], css: ['tag1', 'tag2'] });
+
+await client.ready();
+```
+
+If you use `.middleware()` in your connect based applications, waiting for bundle completion will happen automatically.
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'uniqueLabel'
+});
+
+client.bundle({ js: ['tag1', 'tag2'], css: ['tag1', 'tag2'] });
+
+app.use(client.middleware());
+```
+
+### .scripts(hashes)
+
+Method to retrieve JavaScript bundle URLs once publishing and bundling are complete. Includes a best effort algorithm to try to return an optimally bundled solution, falling back to multiple individual bundles when an optimal bundle is not available.
+
+_Example: Requesting a bundling for 2 tags when only 1 has been published_
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'tag1'
+});
+
+const { js } = await client.publish({ ... });
+await client.bundle({ js: ['tag1', 'tag2'] });
+
+const scripts = client.scripts([js]);
+// scripts => [http://<asset-server-url>/bundle/${js}.js]
+```
+
+This method will always return an array so you can iterate over it in your templates and create script tags
+
+```njk
+{% for script in scripts %}
+    <script src={{ script }}></script>
+{% endfor %}
+```
+
+### .styles()
+
+Method to retrieve css bundle URLs once publishing and bundling are complete. Includes a best effort algorithm to try to return an optimally bundled solution, falling back to multiple individual bundles when an optimal bundle is not available.
+
+_Example: Requesting a bundling for 2 tags when only 1 has been published_
+
+```js
+const client = new Client({
+    server: 'http://asset-server.com:1234',
+    tag: 'tag1'
+});
+
+const { css } = await client.publish({ ... });
+await client.bundle({ css: ['tag1', 'tag2'] });
+
+const styles = client.styles([css]);
+// styles => [http://<asset-server-url>/bundle/${css}.css]
+```
+
+This method will always return an array so you can iterate over it in your templates and create style tags
+
+```njk
+{% for style in styles %}
+    <link rel="stylesheet" href={{ style }} />
+{% endfor %}
 ```
 
 ### .metrics
@@ -588,7 +735,7 @@ As an example, here is how Babel is applied:
 const babelify = require('babelify');
 const Client = require('@asset-pipe/client');
 
-const client = new Client({ buildServerUri: 'http://127.0.0.1:7100' });
+const client = new Client({ server: 'http://127.0.0.1:7100' });
 
 client.transform(babelify, { presets: ['es2015'] });
 
