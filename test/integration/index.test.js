@@ -52,7 +52,7 @@ test(
             js: resolve(__dirname, '../assets/script.js'),
         });
 
-        await client.bundle({ js: ['test'] });
+        await client.bundle({ js: ['test'], css: null });
 
         const fallbackScripts = client.scripts([published.js]);
 
@@ -95,7 +95,7 @@ test(
             css: resolve(__dirname, '../assets/style.css'),
         });
 
-        await client.bundle({ css: ['test'] });
+        await client.bundle({ js: null, css: ['test'] });
 
         const fallbackStyles = client.styles([published.css]);
 
@@ -120,3 +120,248 @@ test(
     },
     30000
 );
+
+test(
+    '.assetUrlByType() method correctly handles .bundlingComplete() method failure',
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        client.bundlingComplete = jest.fn(() => Promise.reject());
+
+        await client.sync();
+
+        const published = await client.publish({
+            js: resolve(__dirname, '../assets/script.js'),
+        });
+
+        await client.bundle({ js: ['test'] });
+
+        const fallbackScripts = client.scripts([published.js]);
+
+        await sleep(500);
+        await server.close();
+
+        expect(fallbackScripts[0]).toMatch(published.js);
+        expect(client.bundlingComplete).toHaveBeenCalled();
+    },
+    30000
+);
+
+test(
+    '.assetUrlByType() method falls back when verification underway',
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        client.bundlingComplete = jest.fn(() => Promise.resolve());
+
+        await client.sync();
+
+        const published = await client.publish({
+            js: resolve(__dirname, '../assets/script.js'),
+        });
+
+        await client.bundle({ js: ['test'] });
+
+        client.verifyingBundle = true;
+
+        const fallbackScripts = client.scripts([published.js]);
+
+        await sleep(500);
+        await server.close();
+
+        expect(fallbackScripts[0]).toMatch(published.js);
+        expect(client.bundlingComplete).not.toHaveBeenCalled();
+    },
+    30000
+);
+
+test(
+    ".assetUrlByType() method falls back when given hash count doesn't match tag count",
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        client.bundleURL = jest.fn();
+
+        await client.sync();
+
+        const published = await client.publish({
+            js: resolve(__dirname, '../assets/script.js'),
+        });
+
+        await client.bundle({ js: ['test', 'test2'] });
+
+        const fallbackScripts = client.scripts([published.js]);
+
+        await sleep(500);
+        await server.close();
+
+        expect(fallbackScripts[0]).toMatch(published.js);
+        expect(client.bundleURL).not.toHaveBeenCalled();
+    },
+    30000
+);
+
+test(
+    '.assetUrlByType() method returns empty array when there are no tags',
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        client.bundleURL = jest.fn();
+
+        await client.sync();
+
+        const published = await client.publish({
+            js: resolve(__dirname, '../assets/script.js'),
+        });
+
+        await client.bundle({ js: [] });
+
+        const scripts = client.scripts([published.js]);
+
+        await sleep(500);
+        await server.close();
+
+        expect(scripts).toHaveLength(0);
+        expect(client.bundleURL).not.toHaveBeenCalled();
+    },
+    30000
+);
+
+test(
+    '.assetUrlByType() method returns empty array when no hashes given',
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        client.bundleURL = jest.fn();
+
+        await client.sync();
+
+        client.scripts();
+        const scripts = client.assetUrlByType(null, 'js');
+
+        await server.close();
+
+        expect(scripts).toHaveLength(0);
+        expect(client.bundleURL).not.toHaveBeenCalled();
+    },
+    30000
+);
+
+test(
+    '.assetUrlByType() method returns empty array when empty array of hashes given',
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        client.bundleURL = jest.fn();
+
+        await client.sync();
+
+        client.styles();
+        const scripts = client.assetUrlByType([], 'css');
+
+        await server.close();
+
+        expect(scripts).toHaveLength(0);
+        expect(client.bundleURL).not.toHaveBeenCalled();
+    },
+    30000
+);
+
+test(
+    '.assetUrlByType() method returns empty array when hashes is a string',
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        client.bundleURL = jest.fn();
+
+        await client.sync();
+
+        await client.publish({
+            js: resolve(__dirname, '../assets/script.js'),
+        });
+
+        await client.bundle({ js: ['test'], css: ['test'] });
+
+        const scripts = client.assetUrlByType('not an array', 'js');
+        client.assetUrlByType([], 'js');
+        client.assetUrlByType(['asd', 'asda'], 'js');
+        client.assetUrlByType(null, 'js');
+        client.assetUrlByType(undefined, 'js');
+
+        await server.close();
+
+        expect(scripts).toHaveLength(0);
+        expect(client.bundleURL).not.toHaveBeenCalled();
+    },
+    30000
+);
+
+test('.bundle() in development mode', async () => {
+    expect.hasAssertions();
+
+    const client = new Client({
+        server: `http://127.0.0.1:1337`,
+        tag: 'test',
+        development: true,
+    });
+
+    await client.bundle();
+
+    expect(client.bundlePromises).toHaveLength(0);
+});
+
+test('.publish() in development mode', async () => {
+    expect.hasAssertions();
+
+    const client = new Client({
+        server: `http://127.0.0.1:1337`,
+        tag: 'test',
+        development: true,
+    });
+
+    await client.publish();
+
+    expect(client.publishPromises).toHaveLength(0);
+});
