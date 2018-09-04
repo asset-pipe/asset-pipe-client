@@ -132,7 +132,7 @@ test(
             tag: 'test',
         });
 
-        client.bundlingComplete = jest.fn(() => Promise.reject());
+        client.bundlingComplete = jest.fn(() => Promise.reject(new Error()));
 
         await client.sync();
 
