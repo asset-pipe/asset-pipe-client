@@ -562,7 +562,7 @@ client.js() // a2b2ab2a2b2b3bab4ab4aa22babab2ba2
 client.css() // b2b2ac2a2b4b3bab4ab2aa22babab2ba2
 ```
 
-### .publish()
+### .publish(options)
 
 Method to publish JavaScript and/or CSS assets to an asset server. Returns a promise which resolves when publishing is done.
 
@@ -612,7 +612,7 @@ client.publish({
 app.use(client.middleware());
 ```
 
-### .bundle()
+### .bundle(options)
 
 Method to instruct an asset server to bundle JavaScript and/or CSS assets. Returns a promise which resolves when bundling is done.
 
@@ -678,7 +678,7 @@ This method will always return an array so you can iterate over it in your templ
 {% endfor %}
 ```
 
-### .styles()
+### .styles(hashes)
 
 Method to retrieve css bundle URLs once publishing and bundling are complete. Includes a best effort algorithm to try to return an optimally bundled solution, falling back to multiple individual bundles when an optimal bundle is not available.
 
