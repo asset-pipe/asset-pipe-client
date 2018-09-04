@@ -52,7 +52,7 @@ test(
             js: resolve(__dirname, '../assets/script.js'),
         });
 
-        await client.bundle({ js: ['test'], css: null });
+        await client.bundle({ js: ['test'] });
 
         const fallbackScripts = client.scripts([published.js]);
 
@@ -95,7 +95,7 @@ test(
             css: resolve(__dirname, '../assets/style.css'),
         });
 
-        await client.bundle({ js: null, css: ['test'] });
+        await client.bundle({ css: ['test'] });
 
         const fallbackStyles = client.styles([published.css]);
 
@@ -266,8 +266,8 @@ test(
 
         await client.sync();
 
-        client.scripts();
-        const scripts = client.assetUrlByType(null, 'js');
+        client.scripts([]);
+        const scripts = client.assetUrlByType([], 'js');
 
         await server.close();
 
@@ -292,7 +292,7 @@ test(
 
         await client.sync();
 
-        client.styles();
+        client.styles([]);
         const scripts = client.assetUrlByType([], 'css');
 
         await server.close();
@@ -324,11 +324,8 @@ test(
 
         await client.bundle({ js: ['test'], css: ['test'] });
 
-        const scripts = client.assetUrlByType('not an array', 'js');
-        client.assetUrlByType([], 'js');
+        const scripts = client.assetUrlByType([], 'js');
         client.assetUrlByType(['asd', 'asda'], 'js');
-        client.assetUrlByType(null, 'js');
-        client.assetUrlByType(undefined, 'js');
 
         await server.close();
 
@@ -365,3 +362,105 @@ test('.publish() in development mode', async () => {
 
     expect(client.publishPromises).toHaveLength(0);
 });
+
+test('publish input validation', () => {
+    expect.hasAssertions();
+
+    const client = new Client({
+        server: `http://127.0.0.1:1337`,
+        tag: 'test',
+        development: true,
+    });
+
+    expect(() => client.publish()).not.toThrow();
+    expect(() => client.publish(null)).toThrow();
+    expect(() => client.publish(1)).toThrow();
+    expect(() => client.publish({ js: 2 })).toThrow();
+    expect(() => client.publish({ css: 1 })).toThrow();
+    expect(() => client.publish({ css: null, js: null })).not.toThrow();
+});
+
+test('bundle input validation', () => {
+    expect.hasAssertions();
+
+    const client = new Client({
+        server: `http://127.0.0.1:1337`,
+        tag: 'test',
+        development: true,
+    });
+
+    expect(() => client.bundle()).not.toThrow();
+    expect(() => client.bundle(null)).toThrow();
+    expect(() => client.bundle(1)).toThrow();
+    expect(() => client.bundle({ js: null })).toThrow();
+    expect(() => client.bundle({ js: 2 })).toThrow();
+    expect(() => client.bundle({ css: null })).toThrow();
+    expect(() => client.bundle({ css: 1 })).toThrow();
+    expect(() => client.bundle({ css: [1, 2] })).toThrow();
+    expect(() => client.bundle({ js: [1, 2] })).toThrow();
+    expect(() => client.bundle({ css: [], js: [] })).not.toThrow();
+});
+
+test('assetUrlByType input validation', () => {
+    expect.hasAssertions();
+
+    const client = new Client({
+        server: `http://127.0.0.1:1337`,
+        tag: 'test',
+        development: true,
+    });
+
+    expect(() => client.assetUrlByType()).toThrow();
+    expect(() => client.assetUrlByType(null)).toThrow();
+    expect(() => client.assetUrlByType(1)).toThrow();
+    expect(() => client.assetUrlByType([])).toThrow();
+
+    expect(() => client.assetUrlByType([], '')).toThrow();
+    expect(() => client.assetUrlByType([], 'fake')).toThrow();
+
+    expect(() => client.assetUrlByType([1, 2], 'js')).toThrow();
+    expect(() => client.assetUrlByType([1, 2], 'css')).toThrow();
+
+    expect(() => client.assetUrlByType([], 'js')).not.toThrow();
+    expect(() => client.assetUrlByType([], 'css')).not.toThrow();
+    expect(() => client.assetUrlByType(['asd', 'asd'], 'js')).not.toThrow();
+    expect(() => client.assetUrlByType(['asd', 'asd'], 'css')).not.toThrow();
+});
+
+test('scripts input validation', () => {
+    expect.hasAssertions();
+
+    const client = new Client({
+        server: `http://127.0.0.1:1337`,
+        tag: 'test',
+        development: true,
+    });
+
+    expect(() => client.scripts(1)).toThrow();
+    expect(() => client.scripts([1, 2])).toThrow();
+
+    expect(() => client.scripts()).not.toThrow();
+    expect(() => client.scripts([])).not.toThrow();
+    expect(() => client.scripts(['asd', 'asd'])).not.toThrow();
+});
+
+test('styles input validation', () => {
+    expect.hasAssertions();
+
+    const client = new Client({
+        server: `http://127.0.0.1:1337`,
+        tag: 'test',
+        development: true,
+    });
+
+    expect(() => client.styles(1)).toThrow();
+    expect(() => client.styles([1, 2])).toThrow();
+
+    expect(() => client.styles()).not.toThrow();
+    expect(() => client.styles([])).not.toThrow();
+    expect(() => client.styles(['asd', 'asd'])).not.toThrow();
+});
+
+// test('bundling without publishing');
+// test('scripts() without bundling');
+// test('styles() without bundling');
