@@ -461,6 +461,20 @@ test('styles input validation', () => {
     expect(() => client.styles(['asd', 'asd'])).not.toThrow();
 });
 
-// test('bundling without publishing');
-// test('scripts() without bundling');
-// test('styles() without bundling');
+test('scripts() and styles() without bundling', async () => {
+    expect.hasAssertions();
+    const { server, port } = await startServer(createAssetServer());
+
+    const client = new Client({
+        server: `http://127.0.0.1:${port}`,
+        tag: 'test',
+    });
+
+    await client.sync();
+    const scripts = client.scripts(['43sad24a3sd24as3d']);
+    const styles = client.styles(['43sad24a3sd24as3d']);
+    await closeServer(server);
+
+    expect(scripts).toEqual([]);
+    expect(styles).toEqual([]);
+});
