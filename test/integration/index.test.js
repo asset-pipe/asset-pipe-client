@@ -56,10 +56,10 @@ test(
 
         const fallbackScripts = client.scripts([published.js]);
 
-        expect(client.verifyingBundle).toBe(true);
+        expect(client.verifyingBundle).toEqual({ css: false, js: true });
         await sleep(500);
         client.scripts([published.js]);
-        expect(client.verifyingBundle).toBe(false);
+        expect(client.verifyingBundle).toEqual({ css: false, js: false });
 
         await closeServer(server);
 
@@ -99,10 +99,10 @@ test(
 
         const fallbackStyles = client.styles([published.css]);
 
-        expect(client.verifyingBundle).toBe(true);
+        expect(client.verifyingBundle).toEqual({ css: true, js: false });
         await sleep(500);
         client.styles([published.css]);
-        expect(client.verifyingBundle).toBe(false);
+        expect(client.verifyingBundle).toEqual({ css: false, js: false });
 
         await closeServer(server);
 
@@ -174,7 +174,7 @@ test(
 
         await client.bundle({ js: ['test'] });
 
-        client.verifyingBundle = true;
+        client.verifyingBundle = { css: false, js: true };
 
         const fallbackScripts = client.scripts([published.js]);
 
