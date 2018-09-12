@@ -18,6 +18,7 @@ Object {
 exports[`publishAssets(tag, files, options) - js - minify options 1`] = `
 Object {
   "minify": "true",
+  "rebundle": "true",
   "sourceMaps": "true",
 }
 `;
@@ -26,18 +27,32 @@ exports[`publishAssets(tag, files, options) - js - query params 1`] = `
 Array [
   Object {
     "minify": "true",
+    "rebundle": "true",
   },
-  Object {},
   Object {
+    "rebundle": "true",
+  },
+  Object {
+    "rebundle": "true",
     "sourceMaps": "true",
   },
-  Object {},
-  Object {},
-  Object {},
+  Object {
+    "rebundle": "true",
+  },
+  Object {
+    "rebundle": "true",
+  },
+  Object {
+    "rebundle": "true",
+  },
 ]
 `;
 
-exports[`publishAssets(tag, files, options) - js - query params overrides options 1`] = `Object {}`;
+exports[`publishAssets(tag, files, options) - js - query params overrides options 1`] = `
+Object {
+  "rebundle": "true",
+}
+`;
 
 exports[`publishAssets(tag, files, options) - js 1`] = `
 Object {
