@@ -245,7 +245,7 @@ test(
         await sleep(500);
         await server.close();
 
-        expect(scripts).toHaveLength(0);
+        expect(scripts).toHaveLength(1);
         expect(client.bundleURL).not.toHaveBeenCalled();
     },
     30000
@@ -475,6 +475,6 @@ test('scripts() and styles() without bundling', async () => {
     const styles = client.styles(['43sad24a3sd24as3d']);
     await closeServer(server);
 
-    expect(scripts).toEqual([]);
-    expect(styles).toEqual([]);
+    expect(scripts[0]).toMatch('43sad24a3sd24as3d');
+    expect(styles[0]).toMatch('43sad24a3sd24as3d');
 });
