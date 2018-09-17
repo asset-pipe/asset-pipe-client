@@ -478,3 +478,37 @@ test('scripts() and styles() without bundling', async () => {
     expect(scripts[0]).toMatch('43sad24a3sd24as3d');
     expect(styles[0]).toMatch('43sad24a3sd24as3d');
 });
+
+test(
+    '.styles() method, not waiting for bundle to finish',
+    async () => {
+        expect.hasAssertions();
+        const { server, port } = await startServer(createAssetServer());
+
+        const client = new Client({
+            server: `http://127.0.0.1:${port}`,
+            tag: 'test',
+        });
+
+        await client.sync();
+
+        await client.publish({
+            css: resolve(__dirname, '../assets/style.css'),
+        });
+
+        client.bundle({ css: ['test'] });
+        client.styles(['asd123123']);
+        await sleep(500);
+        const urls = client.styles(['asd123123']);
+
+        expect(client.verifyingBundle).toEqual({ css: true, js: false });
+
+        await closeServer(server);
+
+        expect(urls[0]).toMatch('asd123123');
+        expect(client.hashes.css).toEqual(
+            'b67d80ae7bbaa31f4c997c9383902e5b94945d755d94cf263fc9c1c401e531a5'
+        );
+    },
+    30000
+);
