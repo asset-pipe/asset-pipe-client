@@ -842,7 +842,7 @@ test('metrics - sync() endpoint', async done => {
 
     await client.sync();
 
-    client.metrics.destroy();
+    client.metrics.push(null);
 
     await closeServer(server);
 });
@@ -871,7 +871,7 @@ test('metrics - publishAssets() endpoint', async done => {
 
     await client.publishAssets('podlet1', ['first.js', 'second.js']);
 
-    client.metrics.destroy();
+    client.metrics.push(null);
 
     await closeServer(server);
 });
@@ -902,7 +902,7 @@ test('metrics - publishInstructions() endpoint', async done => {
         '12da321fd.json',
     ]);
 
-    client.metrics.destroy();
+    client.metrics.push(null);
 
     await closeServer(server);
 });
