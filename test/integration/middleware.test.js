@@ -99,8 +99,18 @@ test('middleware() - publishing assets using ready method for readiness', async 
 test('middleware() development=true', async () => {
     expect.assertions(2);
 
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify({ id: 'hash' }));
+            },
+        },
+    ]);
+
     const client = new Client({
-        buildServerUri: `http://127.0.0.1:1337`,
+        buildServerUri: `http://127.0.0.1:${port}`,
         tag: 'test',
         development: true,
     });
@@ -120,6 +130,8 @@ test('middleware() development=true', async () => {
 
     expect(js).toMatch('console.log');
     expect(css).toMatch('background-color');
+
+    await closeServer(server);
 });
 
 test('middleware() development=false, missing assets', async () => {
@@ -163,8 +175,18 @@ test('middleware() plugins', async () => {
     );
     const ClientWithMocks = require('../../lib/main');
 
+    const { server, port } = await createTestServer([
+        {
+            verb: 'post',
+            path: '/publish-assets',
+            cb(req, res) {
+                res.send(JSON.stringify({ id: 'hash' }));
+            },
+        },
+    ]);
+
     const client = new ClientWithMocks({
-        server: `http://127.0.0.1:1337`,
+        server: `http://127.0.0.1:${port}`,
         tag: 'test',
         development: true,
     });
@@ -185,6 +207,8 @@ test('middleware() plugins', async () => {
 
     expect(mocks.plugin).toHaveBeenCalledTimes(2);
     expect(mocks.transform).toHaveBeenCalledTimes(2);
+
+    await closeServer(server);
 
     jest.resetModules();
 });
