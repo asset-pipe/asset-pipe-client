@@ -39,7 +39,7 @@
     "@asset-pipe/css-writer": "^2.0.4",
     "@asset-pipe/dev-middleware": "^2.0.8",
     "@asset-pipe/js-writer": "^2.0.3",
-    "@metrics/client": "^2.1.1",
+    "@metrics/client": "^2.4.1",
     "JSONStream": "^1.3.5",
     "abslog": "^2.4.0",
     "boom": "^7.3.0",
