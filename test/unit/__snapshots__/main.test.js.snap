@@ -16,7 +16,7 @@ exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js 
   "two"
 ]
 [31m
-[1] "entrypoint filename" with value "one" fails to match the required pattern: /^[a-zA-Z0-9\\/._-]+\\.(js|css|ts|tsx)$/[0m]
+[1] "entrypoint filename" with value "one" fails to match the required pattern: /^[a-zA-Z0-9\\/._-]+\\.(js|jsx|css|ts|tsx)$/[0m]
 `;
 
 exports[`publishAssets(tag, entrypoints) - files array must only contain strings 1`] = `
@@ -36,7 +36,7 @@ exports[`publishAssets(tag, entrypoints) - files array must only contain strings
 [1] "entrypoint filename" must be a string[0m]
 `;
 
-exports[`publishAssets(tag, entrypoints) - files must be provided 1`] = `[ValidationError: Invalid 'type' argument given when attempting to determine writer. "file type" is required]`;
+exports[`publishAssets(tag, entrypoints) - files must be provided 1`] = `[ValidationError: Invalid 'type' argument given when attempting to determine writer. "file type" must be one of [js, css]]`;
 
 exports[`publishAssets(tag, entrypoints) - files must contain at least 1 item 1`] = `
 [ValidationError: Invalid 'entrypoints' argument given when attempting to publish assets. []

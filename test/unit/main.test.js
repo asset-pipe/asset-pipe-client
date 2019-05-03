@@ -262,7 +262,7 @@ test('publishAssets(tag, entrypoints) - request error', async () => {
     Client = require('../../');
     const client = new Client({ buildServerUri });
 
-    const result = client.publishAssets('podlet', ['first.js'], 'js', {});
+    const result = client.publishAssets('podlet', ['first.js'], {});
 
     await expect(result).rejects.toThrow('Fake error!');
 });
