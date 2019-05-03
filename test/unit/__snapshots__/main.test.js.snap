@@ -36,7 +36,7 @@ exports[`publishAssets(tag, entrypoints) - files array must only contain strings
 [1] "entrypoint filename" must be a string[0m]
 `;
 
-exports[`publishAssets(tag, entrypoints) - files must be provided 1`] = `[ValidationError: Invalid 'type' argument given when attempting to determine writer. "file type" must be one of [js, css]]`;
+exports[`publishAssets(tag, entrypoints) - files must be provided 1`] = `[ValidationError: Invalid 'type' argument given when attempting to determine writer. "file type" is required]`;
 
 exports[`publishAssets(tag, entrypoints) - files must contain at least 1 item 1`] = `
 [ValidationError: Invalid 'entrypoints' argument given when attempting to publish assets. []

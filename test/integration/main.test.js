@@ -392,7 +392,11 @@ test('publishAssets(tag, files, options) - 400 error', async () => {
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
-    const result = client.publishAssets('podlet1', ['first.js', 'second.js']);
+    const result = client.publishAssets(
+        'podlet1',
+        ['first.js', 'second.js'],
+        'js'
+    );
 
     await expect(result).rejects.toEqual(new Error('Bad request'));
     await closeServer(server);
@@ -411,7 +415,11 @@ test('publishAssets(tag, files, options) - 500 error', async () => {
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
-    const result = client.publishAssets('podlet1', ['first.js', 'second.js']);
+    const result = client.publishAssets(
+        'podlet1',
+        ['first.js', 'second.js'],
+        'js'
+    );
 
     await expect(result).rejects.toMatchSnapshot();
     await closeServer(server);
@@ -430,10 +438,11 @@ test('publishAssets(tag, files, options) - js', async () => {
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
-    const result = await client.publishAssets('podlet1', [
-        'first.js',
-        'second.js',
-    ]);
+    const result = await client.publishAssets(
+        'podlet1',
+        ['first.js', 'second.js'],
+        'js'
+    );
 
     expect(result).toMatchSnapshot();
     await closeServer(server);
@@ -456,7 +465,7 @@ test('publishAssets(tag, files, options) - js - minify options', async () => {
         sourceMaps: true,
     });
 
-    const result = await client.publishAssets('a', ['b.js']);
+    const result = await client.publishAssets('a', ['b.js'], 'js');
     expect(result).toMatchSnapshot();
     await closeServer(server);
 });
@@ -475,12 +484,12 @@ test('publishAssets(tag, files, options) - js - query params', async () => {
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
     const result = await Promise.all([
-        await client.publishAssets('a', ['b.js'], { minify: true }),
-        await client.publishAssets('a', ['b.js'], { minify: false }),
-        await client.publishAssets('a', ['b.js'], { sourceMaps: true }),
-        await client.publishAssets('a', ['b.js'], { sourceMaps: false }),
-        await client.publishAssets('a', ['b.js'], { minify: null }),
-        await client.publishAssets('a', ['b.js'], { sourceMaps: null }),
+        await client.publishAssets('a', ['b.js'], 'js', { minify: true }),
+        await client.publishAssets('a', ['b.js'], 'js', { minify: false }),
+        await client.publishAssets('a', ['b.js'], 'js', { sourceMaps: true }),
+        await client.publishAssets('a', ['b.js'], 'js', { sourceMaps: false }),
+        await client.publishAssets('a', ['b.js'], 'js', { minify: null }),
+        await client.publishAssets('a', ['b.js'], 'js', { sourceMaps: null }),
     ]);
 
     expect(result).toMatchSnapshot();
@@ -504,7 +513,7 @@ test('publishAssets(tag, files, options) - js - query params overrides options',
         sourceMaps: true,
     });
 
-    const result = await client.publishAssets('a', ['b.js'], {
+    const result = await client.publishAssets('a', ['b.js'], 'js', {
         minify: false,
         sourceMaps: false,
     });
@@ -528,7 +537,7 @@ test('publishAssets(tag, files, options) - uses plugins', async () => {
     const fakePluginOptions = { _id: 20 };
     client.plugin(fakePlugin, fakePluginOptions);
 
-    await client.publishAssets('podlet1', ['first.js', 'second.js']);
+    await client.publishAssets('podlet1', ['first.js', 'second.js'], 'js');
 
     expect(mockPlugin).toHaveBeenCalledWith(fakePlugin, fakePluginOptions);
     await closeServer(server);
@@ -550,7 +559,7 @@ test('publishAssets(tag, files, options) - uses transforms', async () => {
     const fakeTransformOptions = { _id: 40 };
     client.transform(fakeTransform, fakeTransformOptions);
 
-    await client.publishAssets('podlet1', ['first.js', 'second.js']);
+    await client.publishAssets('podlet1', ['first.js', 'second.js'], 'js');
 
     expect(mockTransform).toHaveBeenCalledWith(
         fakeTransform,
@@ -572,10 +581,11 @@ test('publishAssets(tag, files, options) - css', async () => {
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
-    const result = await client.publishAssets('podlet1', [
-        'first.css',
-        'second.css',
-    ]);
+    const result = await client.publishAssets(
+        'podlet1',
+        ['first.css', 'second.css'],
+        'css'
+    );
 
     expect(result).toMatchSnapshot();
     await closeServer(server);
@@ -869,7 +879,7 @@ test('metrics - publishAssets() endpoint', async done => {
         done();
     });
 
-    await client.publishAssets('podlet1', ['first.js', 'second.js']);
+    await client.publishAssets('podlet1', ['first.js', 'second.js'], 'js');
 
     client.metrics.push(null);
 
