@@ -8,6 +8,11 @@ test('file schema allows for file with .js extension', () => {
     expect(result.error).toEqual(null);
 });
 
+test('file schema allows for file with .jsx extension', () => {
+    const result = Joi.validate('index.jsx', schemas.file);
+    expect(result.error).toEqual(null);
+});
+
 test('file schema allows for file with .css extension', () => {
     const result = Joi.validate('index.css', schemas.file);
     expect(result.error).toEqual(null);
