@@ -13,7 +13,17 @@ test('file schema allows for file with .css extension', () => {
     expect(result.error).toEqual(null);
 });
 
-test('file schema does not allow for non .js/.css file extensions', () => {
+test('file schema allows for file with .ts extension', () => {
+    const result = Joi.validate('index.ts', schemas.file);
+    expect(result.error).toEqual(null);
+});
+
+test('file schema allows for file with .tsx extension', () => {
+    const result = Joi.validate('index.tsx', schemas.file);
+    expect(result.error).toEqual(null);
+});
+
+test('file schema does not allow for non .js/.css/.ts/.tsx file extensions', () => {
     const result = Joi.validate('index.json', schemas.file);
     expect(result.error).toMatchSnapshot();
 });
