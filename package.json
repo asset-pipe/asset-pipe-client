@@ -54,7 +54,7 @@
     "asset-pipe-test-es5a": "^1.0.0",
     "asset-pipe-test-es5b": "^1.0.0",
     "body-parser": "^1.18.3",
-    "commitizen": "^3.0.7",
+    "commitizen": "^3.1.2",
     "cz-conventional-changelog": "^2.0.0",
     "eslint": "^5.15.1",
     "eslint-config-finn": "^3.0.1",
