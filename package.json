@@ -25,7 +25,8 @@
     "Greenkeeper (http://greenkeeper.io/)",
     "Richard Walker (https://github.com/digitalsadhu)",
     "Simen Bekkhus (https://github.com/SimenB)",
-    "greenkeeper[bot] (http://github.com/apps/greenkeeper)"
+    "greenkeeper[bot] (http://github.com/apps/greenkeeper)",
+    "hanskr (https://github.com/hanskr)"
   ],
   "bugs": {
     "url": "https://github.com/asset-pipe/asset-pipe-client/issues"
@@ -38,7 +39,7 @@
     "@asset-pipe/common": "^3.0.1",
     "@asset-pipe/css-writer": "^2.0.4",
     "@asset-pipe/dev-middleware": "^2.0.8",
-    "@asset-pipe/js-writer": "^2.0.3",
+    "@asset-pipe/js-writer": "^2.0.4",
     "@metrics/client": "^2.4.1",
     "JSONStream": "^1.3.5",
     "abslog": "^2.4.0",
