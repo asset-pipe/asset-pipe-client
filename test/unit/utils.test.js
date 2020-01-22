@@ -16,7 +16,7 @@ test('buildURL with multiple params', () => {
     const result = buildURL('http://server.com', {
         prop1: 'value',
         prop2: 'value',
-        prop3: 'value',
+        prop3: 'value'
     });
     expect(result).toEqual(
         'http://server.com/?prop1=value&prop2=value&prop3=value'

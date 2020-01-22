@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+
 'use strict';
 
 const express = require('express');
@@ -12,7 +14,7 @@ function sleep(ms) {
 function createAssetServer() {
     const app = express();
     const server = new AssetPipeServer(null, {
-        bundleInProcess: true,
+        bundleInProcess: true
     });
     app.use(server.router());
     return app;
@@ -23,7 +25,7 @@ function startServer(app) {
         const server = app.listen(() => {
             resolve({
                 server,
-                port: server.address().port,
+                port: server.address().port
             });
         });
     });
@@ -41,13 +43,13 @@ test('.scripts()', async () => {
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     await client.sync();
 
     const published = await client.publish({
-        js: resolve(__dirname, '../assets/script.js'),
+        js: resolve(__dirname, '../assets/script.js')
     });
 
     await client.bundle({ js: ['test'] });
@@ -80,13 +82,13 @@ test('.styles() method', async () => {
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     await client.sync();
 
     const published = await client.publish({
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
 
     await client.bundle({ css: ['test'] });
@@ -119,7 +121,7 @@ test('.assetUrlByType() method correctly handles .bundlingComplete() method fail
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.bundlingComplete = jest.fn(() => Promise.reject(new Error()));
@@ -127,7 +129,7 @@ test('.assetUrlByType() method correctly handles .bundlingComplete() method fail
     await client.sync();
 
     const published = await client.publish({
-        js: resolve(__dirname, '../assets/script.js'),
+        js: resolve(__dirname, '../assets/script.js')
     });
 
     await client.bundle({ js: ['test'] });
@@ -147,7 +149,7 @@ test('.assetUrlByType() method falls back when verification underway', async () 
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.bundlingComplete = jest.fn(() => Promise.resolve());
@@ -155,7 +157,7 @@ test('.assetUrlByType() method falls back when verification underway', async () 
     await client.sync();
 
     const published = await client.publish({
-        js: resolve(__dirname, '../assets/script.js'),
+        js: resolve(__dirname, '../assets/script.js')
     });
 
     await client.bundle({ js: ['test'] });
@@ -177,7 +179,7 @@ test(".assetUrlByType() method falls back when given hash count doesn't match ta
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.bundleURL = jest.fn();
@@ -185,7 +187,7 @@ test(".assetUrlByType() method falls back when given hash count doesn't match ta
     await client.sync();
 
     const published = await client.publish({
-        js: resolve(__dirname, '../assets/script.js'),
+        js: resolve(__dirname, '../assets/script.js')
     });
 
     await client.bundle({ js: ['test', 'test2'] });
@@ -205,7 +207,7 @@ test('.assetUrlByType() method returns empty array when there are no tags', asyn
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.bundleURL = jest.fn();
@@ -213,7 +215,7 @@ test('.assetUrlByType() method returns empty array when there are no tags', asyn
     await client.sync();
 
     const published = await client.publish({
-        js: resolve(__dirname, '../assets/script.js'),
+        js: resolve(__dirname, '../assets/script.js')
     });
 
     await client.bundle({ js: [] });
@@ -233,7 +235,7 @@ test('.assetUrlByType() method returns empty array when no hashes given', async 
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.bundleURL = jest.fn();
@@ -255,7 +257,7 @@ test('.assetUrlByType() method returns empty array when empty array of hashes gi
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.bundleURL = jest.fn();
@@ -277,7 +279,7 @@ test('.assetUrlByType() method returns empty array when hashes is a string', asy
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.bundleURL = jest.fn();
@@ -285,7 +287,7 @@ test('.assetUrlByType() method returns empty array when hashes is a string', asy
     await client.sync();
 
     await client.publish({
-        js: resolve(__dirname, '../assets/script.js'),
+        js: resolve(__dirname, '../assets/script.js')
     });
 
     await client.bundle({ js: ['test'], css: ['test'] });
@@ -305,7 +307,7 @@ test('.bundle() in development mode', async () => {
     const client = new Client({
         server: `http://127.0.0.1:1337`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     await client.bundle();
@@ -319,7 +321,7 @@ test('.publish() in development mode', async () => {
     const client = new Client({
         server: `http://127.0.0.1:1337`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     await client.publish();
@@ -333,7 +335,7 @@ test('publish input validation', () => {
     const client = new Client({
         server: `http://127.0.0.1:1337`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     expect(() => client.publish()).not.toThrow();
@@ -350,7 +352,7 @@ test('bundle input validation', () => {
     const client = new Client({
         server: `http://127.0.0.1:1337`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     expect(() => client.bundle()).not.toThrow();
@@ -371,7 +373,7 @@ test('assetUrlByType input validation', () => {
     const client = new Client({
         server: `http://127.0.0.1:1337`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     expect(() => client.assetUrlByType()).toThrow();
@@ -397,7 +399,7 @@ test('scripts input validation', () => {
     const client = new Client({
         server: `http://127.0.0.1:1337`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     expect(() => client.scripts(1)).toThrow();
@@ -414,7 +416,7 @@ test('styles input validation', () => {
     const client = new Client({
         server: `http://127.0.0.1:1337`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     expect(() => client.styles(1)).toThrow();
@@ -431,7 +433,7 @@ test('scripts() and styles() without bundling', async () => {
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     await client.sync();
@@ -449,13 +451,13 @@ test('.styles() method, not waiting for bundle to finish', async () => {
 
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     await client.sync();
 
     await client.publish({
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
 
     client.bundle({ css: ['test'] });

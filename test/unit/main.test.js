@@ -1,3 +1,6 @@
+/* eslint-disable consistent-return */
+/* eslint-disable global-require */
+
 'use strict';
 
 let Client = require('../../');
@@ -42,9 +45,9 @@ function createJsWriterMock() {
                         return this.push(null);
                     }
                     this.push(items.shift());
-                },
+                }
             });
-        },
+        }
     }));
 }
 
@@ -61,7 +64,7 @@ test('new Client(options) - should throw when missing buildServerUri option', ()
 
 test('new Client(options)', () => {
     const subject = new Client({
-        buildServerUri: 'http://127.0.0.1:9999',
+        buildServerUri: 'http://127.0.0.1:9999'
     });
 
     expect(subject.buildServerUri).toEqual('http://127.0.0.1:9999');
@@ -73,7 +76,7 @@ test('new Client(options)', () => {
 test('new Client(options) 2', () => {
     const subject = new Client({
         buildServerUri: 'http://127.0.0.1:1111',
-        serverId: 'some-server-id',
+        serverId: 'some-server-id'
     });
 
     expect(subject.buildServerUri).toEqual('http://127.0.0.1:1111');
@@ -277,7 +280,7 @@ test('publishInstructions(tag, type, data) - request error', async () => {
     const client = new Client({ buildServerUri });
     const result = client.publishInstructions('layout', 'js', [
         'podlet1',
-        'podlet2',
+        'podlet2'
     ]);
 
     await expect(result).rejects.toThrow('Fake error!');
