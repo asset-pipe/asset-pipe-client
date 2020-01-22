@@ -17,5 +17,6 @@ module.exports.js = options => {
 };
 
 module.exports.help = () => {
+    // eslint-disable-next-line no-console
     console.log('  Examples here:');
 };

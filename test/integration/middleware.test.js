@@ -1,10 +1,14 @@
+/* eslint-disable global-require */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-shadow */
+
 'use strict';
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const Client = require('../../');
 const { resolve } = require('path');
 const request = require('supertest');
+const Client = require('../../');
 
 function closeServer(server) {
     return new Promise(resolve => {
@@ -22,7 +26,7 @@ function createTestServer(handlers) {
         const serve = server.listen(() => {
             resolve({
                 server: serve,
-                port: serve.address().port,
+                port: serve.address().port
             });
         });
     });
@@ -36,18 +40,18 @@ test('middleware() - publishing assets using middleware for readiness', async ()
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify({ id: 'hash' }));
-            },
-        },
+            }
+        }
     ]);
 
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.publish({
         js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
 
     const app = express();
@@ -73,18 +77,18 @@ test('middleware() - publishing assets using ready method for readiness', async 
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify({ id: 'hash' }));
-            },
-        },
+            }
+        }
     ]);
 
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     client.publish({
         js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
 
     client.middleware();
@@ -105,19 +109,19 @@ test('middleware() development=true', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify({ id: 'hash' }));
-            },
-        },
+            }
+        }
     ]);
 
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     client.publish({
         js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
 
     const app = express();
@@ -141,14 +145,14 @@ test('middleware() development=false, missing assets', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify({ id: 'hash' }));
-            },
-        },
+            }
+        }
     ]);
 
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         tag: 'test',
-        development: false,
+        development: false
     });
 
     client.middleware();
@@ -162,7 +166,7 @@ test('middleware() plugins', async () => {
     const mocks = {
         plugin: jest.fn(),
         transform: jest.fn(),
-        router: jest.fn(),
+        router: jest.fn()
     };
     jest.doMock(
         '@asset-pipe/dev-middleware',
@@ -181,19 +185,19 @@ test('middleware() plugins', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify({ id: 'hash' }));
-            },
-        },
+            }
+        }
     ]);
 
     const client = new ClientWithMocks({
         server: `http://127.0.0.1:${port}`,
         tag: 'test',
-        development: true,
+        development: true
     });
 
     client.publish({
         js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
 
     client.plugin('fake1', {});

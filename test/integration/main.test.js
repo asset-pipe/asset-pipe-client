@@ -1,3 +1,8 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable consistent-return */
+/* eslint-disable global-require */
+/* eslint-disable no-shadow */
+
 'use strict';
 
 const express = require('express');
@@ -28,9 +33,9 @@ jest.mock('@asset-pipe/js-writer', () => {
                         return this.push(null);
                     }
                     this.push(items.shift());
-                },
+                }
             });
-        },
+        }
     }));
     return mockWriter;
 });
@@ -47,9 +52,9 @@ jest.mock('@asset-pipe/css-writer', () => {
                         return this.push(null);
                     }
                     this.push(items.shift());
-                },
+                }
             });
-        },
+        }
     };
     return jest.fn(() => cssWriter);
 });
@@ -66,7 +71,7 @@ function createTestServer(handlers) {
         const serve = server.listen(() => {
             resolve({
                 server: serve,
-                port: serve.address().port,
+                port: serve.address().port
             });
         });
     });
@@ -80,8 +85,8 @@ test('uploadFeed(files, options) - js', async () => {
             path: '/feed/js',
             cb(req, res) {
                 res.send({ message: 'Success!' });
-            },
-        },
+            }
+        }
     ]);
     const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
@@ -101,17 +106,17 @@ test('uploadFeed(files, options) - js - with serverId', async () => {
             path: '/feed/js',
             cb(req, res) {
                 res.send({
-                    message: `Success! ${req.headers['origin-server-id']}`,
+                    message: `Success! ${req.headers['origin-server-id']}`
                 });
-            },
-        },
+            }
+        }
     ]);
     const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
     const serverId = `some-server-id-${Math.random()}`;
     const client = new Client({
         serverId,
-        buildServerUri: `http://127.0.0.1:${port}`,
+        buildServerUri: `http://127.0.0.1:${port}`
     });
 
     const result = client.uploadFeed(fakeFiles, fakeOptions);
@@ -126,8 +131,8 @@ test('uploadFeed(files, options) - js - uses transforms', async () => {
         {
             verb: 'post',
             path: '/feed/js',
-            cb: (req, res) => res.send('Success!'),
-        },
+            cb: (req, res) => res.send('Success!')
+        }
     ]);
     const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
@@ -152,8 +157,8 @@ test('uploadFeed(files, options) - js - uses plugins', async () => {
         {
             verb: 'post',
             path: '/feed/js',
-            cb: (req, res) => res.send({ message: 'Success!' }),
-        },
+            cb: (req, res) => res.send({ message: 'Success!' })
+        }
     ]);
     const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
@@ -175,8 +180,8 @@ test('uploadFeed(files) - 200', async () => {
         {
             verb: 'post',
             path: '/feed/js',
-            cb: (req, res) => res.status(200).send({ message: 'Bad request!' }),
-        },
+            cb: (req, res) => res.status(200).send({ message: 'Bad request!' })
+        }
     ]);
     const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
@@ -194,8 +199,8 @@ test('uploadFeed(files) - 400', async () => {
         {
             verb: 'post',
             path: '/feed/js',
-            cb: (req, res) => res.status(400).send({ message: 'Bad request!' }),
-        },
+            cb: (req, res) => res.status(400).send({ message: 'Bad request!' })
+        }
     ]);
     const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
@@ -213,8 +218,8 @@ test('uploadFeed(files) - other status codes', async () => {
         {
             verb: 'post',
             path: '/feed/js',
-            cb: (req, res) => res.status(300).send({ message: 'Bad request!' }),
-        },
+            cb: (req, res) => res.status(300).send({ message: 'Bad request!' })
+        }
     ]);
     const fakeFiles = ['first.js', 'second.js'];
     const fakeOptions = {};
@@ -234,8 +239,8 @@ test('uploadFeed(files) - css', async () => {
         {
             verb: 'post',
             path: '/feed/css',
-            cb: (req, res) => res.status(200).send(req.body),
-        },
+            cb: (req, res) => res.status(200).send(req.body)
+        }
     ]);
     const fakeFiles = ['first.css', 'second.css', 'third.css'];
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -252,8 +257,8 @@ test('createRemoteBundle(sources) - 200', async () => {
         {
             verb: 'post',
             path: '/bundle/js',
-            cb: (req, res) => res.send(req.body),
-        },
+            cb: (req, res) => res.send(req.body)
+        }
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
@@ -270,14 +275,14 @@ test('createRemoteBundle(sources) - 200 - with serverId', async () => {
         {
             verb: 'post',
             path: '/bundle/js',
-            cb: (req, res) => res.send(req.headers['origin-server-id']),
-        },
+            cb: (req, res) => res.send(req.headers['origin-server-id'])
+        }
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
     const serverId = `anather-server-id-${Math.random()}`;
     const client = new Client({
         serverId,
-        buildServerUri: `http://127.0.0.1:${port}`,
+        buildServerUri: `http://127.0.0.1:${port}`
     });
     const result = client.createRemoteBundle(fakeSources, 'js');
 
@@ -291,12 +296,12 @@ test('createRemoteBundle(sources) - 200 - without serverId', async () => {
         {
             verb: 'post',
             path: '/bundle/js',
-            cb: (req, res) => res.send(`${req.headers['origin-server-id']}`),
-        },
+            cb: (req, res) => res.send(`${req.headers['origin-server-id']}`)
+        }
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
     const client = new Client({
-        buildServerUri: `http://127.0.0.1:${port}`,
+        buildServerUri: `http://127.0.0.1:${port}`
     });
     const result = client.createRemoteBundle(fakeSources, 'js');
 
@@ -310,8 +315,8 @@ test('createRemoteBundle(sources) - css', async () => {
         {
             verb: 'post',
             path: '/bundle/css',
-            cb: (req, res) => res.send(req.body),
-        },
+            cb: (req, res) => res.send(req.body)
+        }
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
@@ -328,8 +333,8 @@ test('createRemoteBundle(sources) - 202', async () => {
         {
             verb: 'post',
             path: '/bundle/js',
-            cb: (req, res) => res.status(202).send({ message: 'success 202' }),
-        },
+            cb: (req, res) => res.status(202).send({ message: 'success 202' })
+        }
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
@@ -346,8 +351,8 @@ test('createRemoteBundle(sources) - 400', async () => {
         {
             verb: 'post',
             path: '/bundle/js',
-            cb: (req, res) => res.status(400).send({ message: 'Bad request' }),
-        },
+            cb: (req, res) => res.status(400).send({ message: 'Bad request' })
+        }
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
@@ -365,8 +370,8 @@ test('createRemoteBundle(sources) - other status codes', async () => {
             verb: 'post',
             path: '/bundle/js',
             cb: (req, res) =>
-                res.status(420).send({ message: "It's that time again" }),
-        },
+                res.status(420).send({ message: "It's that time again" })
+        }
     ]);
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
 
@@ -387,8 +392,8 @@ test('publishAssets(tag, files, options) - 400 error', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.status(400).send({ message: 'Bad request' });
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -406,8 +411,8 @@ test('publishAssets(tag, files, options) - 500 error', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.status(500).send({ message: 'Server error' });
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -425,14 +430,14 @@ test('publishAssets(tag, files, options) - js', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
     const result = await client.publishAssets('podlet1', [
         'first.js',
-        'second.js',
+        'second.js'
     ]);
 
     expect(result).toMatchSnapshot();
@@ -447,13 +452,13 @@ test('publishAssets(tag, files, options) - js - minify options', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(req.query);
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         minify: true,
-        sourceMaps: true,
+        sourceMaps: true
     });
 
     const result = await client.publishAssets('a', ['b.js']);
@@ -469,8 +474,8 @@ test('publishAssets(tag, files, options) - js - query params', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(req.query);
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -480,7 +485,7 @@ test('publishAssets(tag, files, options) - js - query params', async () => {
         await client.publishAssets('a', ['b.js'], { sourceMaps: true }),
         await client.publishAssets('a', ['b.js'], { sourceMaps: false }),
         await client.publishAssets('a', ['b.js'], { minify: null }),
-        await client.publishAssets('a', ['b.js'], { sourceMaps: null }),
+        await client.publishAssets('a', ['b.js'], { sourceMaps: null })
     ]);
 
     expect(result).toMatchSnapshot();
@@ -495,18 +500,18 @@ test('publishAssets(tag, files, options) - js - query params overrides options',
             path: '/publish-assets',
             cb(req, res) {
                 res.send(req.query);
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         minify: true,
-        sourceMaps: true,
+        sourceMaps: true
     });
 
     const result = await client.publishAssets('a', ['b.js'], {
         minify: false,
-        sourceMaps: false,
+        sourceMaps: false
     });
     expect(result).toMatchSnapshot();
     await closeServer(server);
@@ -520,8 +525,8 @@ test('publishAssets(tag, files, options) - uses plugins', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const fakePlugin = { _id: 10 };
@@ -542,8 +547,8 @@ test('publishAssets(tag, files, options) - uses transforms', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const fakeTransform = { _id: 30 };
@@ -567,14 +572,14 @@ test('publishAssets(tag, files, options) - css', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
     const result = await client.publishAssets('podlet1', [
         'first.css',
-        'second.css',
+        'second.css'
     ]);
 
     expect(result).toMatchSnapshot();
@@ -587,14 +592,14 @@ test('publishInstructions(tag, type, data) - js', async () => {
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.send(req.body),
-        },
+            cb: (req, res) => res.send(req.body)
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = await client.publishInstructions('layout', 'js', [
         'a12das3d.json',
-        '12da321fd.json',
+        '12da321fd.json'
     ]);
 
     expect(result).toMatchSnapshot();
@@ -608,14 +613,14 @@ test('publishInstructions(tag, type, data) - js - options', async () => {
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.send(req.query),
-        },
+            cb: (req, res) => res.send(req.query)
+        }
     ]);
 
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         minify: true,
-        sourceMaps: true,
+        sourceMaps: true
     });
     const result = await client.publishInstructions('a', 'js', ['b']);
 
@@ -630,8 +635,8 @@ test('publishInstructions(tag, type, data) - js - query params', async () => {
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.send(req.query),
-        },
+            cb: (req, res) => res.send(req.query)
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -641,7 +646,7 @@ test('publishInstructions(tag, type, data) - js - query params', async () => {
         client.publishInstructions('a', 'js', ['b'], { sourceMaps: true }),
         client.publishInstructions('a', 'js', ['b'], { sourceMaps: false }),
         client.publishInstructions('a', 'js', ['b'], { minify: null }),
-        client.publishInstructions('a', 'js', ['b'], { sourceMaps: null }),
+        client.publishInstructions('a', 'js', ['b'], { sourceMaps: null })
     ]);
 
     expect(result).toMatchSnapshot();
@@ -655,18 +660,18 @@ test('publishInstructions(tag, type, data) - js - query params overrides options
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.send(req.query),
-        },
+            cb: (req, res) => res.send(req.query)
+        }
     ]);
 
     const client = new Client({
         buildServerUri: `http://127.0.0.1:${port}`,
         minify: true,
-        sourceMaps: true,
+        sourceMaps: true
     });
     const result = await client.publishInstructions('a', 'js', ['b'], {
         minify: false,
-        sourceMaps: false,
+        sourceMaps: false
     });
 
     expect(result).toMatchSnapshot();
@@ -680,14 +685,14 @@ test('publishInstructions(tag, type, data) - css', async () => {
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.send(req.body),
-        },
+            cb: (req, res) => res.send(req.body)
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = await client.publishInstructions('layout', 'css', [
         'a12das3d.json',
-        '12da321fd.json',
+        '12da321fd.json'
     ]);
 
     expect(result).toMatchSnapshot();
@@ -701,14 +706,14 @@ test('publishInstructions(tag, type, data) - 400', async () => {
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.status(400).send({ message: 'Bad request' }),
-        },
+            cb: (req, res) => res.status(400).send({ message: 'Bad request' })
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.publishInstructions('layout', 'css', [
         'a12das3d.json',
-        '12da321fd.json',
+        '12da321fd.json'
     ]);
 
     await expect(result).rejects.toEqual(new Error('Bad request'));
@@ -722,14 +727,14 @@ test('publishInstructions(tag, type, data) - 500', async () => {
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.status(500).send({ message: 'Server error' }),
-        },
+            cb: (req, res) => res.status(500).send({ message: 'Server error' })
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
     const result = client.publishInstructions('layout', 'css', [
         'a12das3d.json',
-        '12da321fd.json',
+        '12da321fd.json'
     ]);
 
     await expect(result).rejects.toMatchSnapshot();
@@ -744,8 +749,8 @@ test('sync() - 200', async () => {
             verb: 'get',
             path: '/sync',
             cb: (req, res) =>
-                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
-        },
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' })
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -763,8 +768,8 @@ test('sync() - 500', async () => {
         {
             verb: 'get',
             path: '/sync',
-            cb: (req, res) => res.status(200).send('undefined'),
-        },
+            cb: (req, res) => res.status(200).send('undefined')
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -780,8 +785,8 @@ test('sync() - called when values already cached', async () => {
             verb: 'get',
             path: '/sync',
             cb: (req, res) =>
-                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
-        },
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' })
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -803,8 +808,8 @@ test('sync() - called when publicFeedUrl already cached but not publicBundleUrl'
             verb: 'get',
             path: '/sync',
             cb: (req, res) =>
-                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
-        },
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' })
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -825,8 +830,8 @@ test('metrics - sync() endpoint', async done => {
             verb: 'get',
             path: '/sync',
             cb: (req, res) =>
-                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' }),
-        },
+                res.json({ publicBundleUrl: 'a', publicFeedUrl: 'b' })
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -855,8 +860,8 @@ test('metrics - publishAssets() endpoint', async done => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
@@ -882,8 +887,8 @@ test('metrics - publishInstructions() endpoint', async done => {
         {
             verb: 'post',
             path: '/publish-instructions',
-            cb: (req, res) => res.send(req.body),
-        },
+            cb: (req, res) => res.send(req.body)
+        }
     ]);
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
@@ -899,7 +904,7 @@ test('metrics - publishInstructions() endpoint', async done => {
 
     await client.publishInstructions('layout', 'js', [
         'a12das3d.json',
-        '12da321fd.json',
+        '12da321fd.json'
     ]);
 
     client.metrics.push(null);
@@ -915,24 +920,24 @@ test('publish', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify({ id: '1adsa3d123as1a3ds123' }));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     const result = await client.publish({
         js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
 
     await closeServer(server);
 
     expect(result).toEqual({
         css: '1adsa3d123as1a3ds123',
-        js: '1adsa3d123as1a3ds123',
+        js: '1adsa3d123as1a3ds123'
     });
 });
 
@@ -944,12 +949,12 @@ test('bundle', async () => {
             path: '/publish-instructions',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     const result = await client.bundle({ js: ['test'], css: ['test'] });
@@ -957,7 +962,7 @@ test('bundle', async () => {
 
     expect(result).toEqual([
         { data: ['test'], tag: 'test', type: 'js' },
-        { data: ['test'], tag: 'test', type: 'css' },
+        { data: ['test'], tag: 'test', type: 'css' }
     ]);
 });
 
@@ -969,24 +974,24 @@ test('ready', async () => {
             path: '/publish-assets',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
+            }
         },
         {
             verb: 'post',
             path: '/publish-instructions',
             cb(req, res) {
                 res.send(JSON.stringify(req.body));
-            },
-        },
+            }
+        }
     ]);
     const client = new Client({
         server: `http://127.0.0.1:${port}`,
-        tag: 'test',
+        tag: 'test'
     });
 
     await client.publish({
         js: resolve(__dirname, '../assets/script.js'),
-        css: resolve(__dirname, '../assets/style.css'),
+        css: resolve(__dirname, '../assets/style.css')
     });
     await client.bundle({ js: ['test'], css: ['test'] });
 

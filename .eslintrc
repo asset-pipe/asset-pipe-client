@@ -1,18 +1,13 @@
 {
   "root": true,
-  "parserOptions": {
-    "ecmaVersion": 2017,
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
-  },
-  "extends": [
-    "finn",
-    "finn/node",
-    "finn-prettier"
-  ],
+  "extends": ["airbnb-base", "prettier"],
   "env": {
     "node": true,
     "jest": true
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "strict": [0, "global"],
+    "class-methods-use-this": [0]
   }
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 'use strict';
 
 const program = require('commander');
@@ -21,12 +22,13 @@ program
     .on('--help', writer.help);
 
 program.on('--help', () => {
+    // eslint-disable-next-line no-console
     console.log('  Help here:');
 });
 
 if (!process.argv.slice(2).length) {
     program.outputHelp();
-    return;
+    process.exit();
 }
 
 program.parse(process.argv);
