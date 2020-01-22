@@ -75,7 +75,7 @@
   "scripts": {
     "lint:format": "eslint --fix .",
     "lint": "eslint .",
-    "test": "tap",
+    "test": "jest",
     "precommit": "lint-staged",
     "cm": "git-cz",
     "readme": "projectz compile",
