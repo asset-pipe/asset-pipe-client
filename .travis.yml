@@ -1,19 +1,17 @@
 language: node_js
 node_js:
-  - '11'
-  - '10'
-  - '8'
+    - '12'
+    - '13'
 script:
-  - npm test
-  - npm run lint
+    - npm test
+    - npm run lint
 cache:
-  npm: true
-  directories:
-    - node_modules
+    npm: true
+    directories:
+        - node_modules
 after_success:
-  - npm run travis-deploy-once "npm run semantic-release"
+    - npm run travis-deploy-once "npm run semantic-release"
 branches:
-  except:
-    - /^v\d+\.\d+\.\d+$/
+    except:
+        - /^v\d+\.\d+\.\d+$/
 dist: trusty
-

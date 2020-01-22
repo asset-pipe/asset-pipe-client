@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`createRemoteBundle() - missing source argument 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'sources' to be an array. Instead got undefined]`;
+exports[`createRemoteBundle() - missing source argument 1`] = `[AssertionError: Expected argument 'sources' to be an array. Instead got undefined]`;
 
-exports[`createRemoteBundle(sources) - invalid source argument 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'sources' to be an array. Instead got string]`;
+exports[`createRemoteBundle(sources) - invalid source argument 1`] = `[AssertionError: Expected argument 'sources' to be an array. Instead got string]`;
 
-exports[`createRemoteBundle(sources) - invalid type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'fake']`;
+exports[`createRemoteBundle(sources) - invalid type 1`] = `[AssertionError: Expected argument 'type' to be one of js|css. Instead got 'fake']`;
 
-exports[`createRemoteBundle(sources) - missing type 1`] = `[AssertionError [ERR_ASSERTION]: Expected argument 'type' to be one of js|css. Instead got 'undefined']`;
+exports[`createRemoteBundle(sources) - missing type 1`] = `[AssertionError: Expected argument 'type' to be one of js|css. Instead got 'undefined']`;
 
-exports[`createRemoteBundle(sources) - source argument missing .json ext. 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'sources' to end with .json. Instead got a1c12a45ca1ac1ca1cc1ac1ca1]`;
+exports[`createRemoteBundle(sources) - source argument missing .json ext. 1`] = `[AssertionError: Expected ALL items in array 'sources' to end with .json. Instead got a1c12a45ca1ac1ca1cc1ac1ca1]`;
 
 exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js filenames 1`] = `
 [ValidationError: Invalid 'entrypoints' argument given when attempting to publish assets. [
@@ -16,7 +16,7 @@ exports[`publishAssets(tag, entrypoints) - files array must contain .css or .js 
   "two"
 ]
 [31m
-[1] "entrypoint filename" with value "one" fails to match the required pattern: /^[a-zA-Z0-9\\/._-]+\\.(js|jsx|css|ts|tsx)$/[0m]
+[1] "entrypoint filename" with value "one" fails to match the required pattern: /^[a-zA-Z0-9/._-]+\\.(js|jsx|css|ts|tsx)$/[0m]
 `;
 
 exports[`publishAssets(tag, entrypoints) - files array must only contain strings 1`] = `
@@ -81,10 +81,10 @@ exports[`publishInstructions(tag, type, data) - missing type 1`] = `
 [1] "file type" must be one of [js, css][0m]
 `;
 
-exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `[AssertionError [ERR_ASSERTION]: Expected ALL items in array 'files' to end with .js or ALL items in array 'files' to end with .css, got one, two]`;
+exports[`uploadFeed() - files array must contain .css or .js filenames 1`] = `[AssertionError: Expected ALL items in array 'files' to end with .js or ALL items in array 'files' to end with .css, got one, two]`;
 
-exports[`uploadFeed() - files array must only contain strings 1`] = `[AssertionError [ERR_ASSERTION]: Expected each item in array 'files' to be a string, got 1,true]`;
+exports[`uploadFeed() - files array must only contain strings 1`] = `[AssertionError: Expected each item in array 'files' to be a string, got 1,true]`;
 
-exports[`uploadFeed() - files must be an array 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' to be an array, instead got undefined]`;
+exports[`uploadFeed() - files must be an array 1`] = `[AssertionError: Expected 'files' to be an array, instead got undefined]`;
 
-exports[`uploadFeed() - files must contain at least 1 item 1`] = `[AssertionError [ERR_ASSERTION]: Expected 'files' array to contain at least 1 item]`;
+exports[`uploadFeed() - files must contain at least 1 item 1`] = `[AssertionError: Expected 'files' array to contain at least 1 item]`;
