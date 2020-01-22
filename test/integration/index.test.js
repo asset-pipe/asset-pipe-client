@@ -64,15 +64,15 @@ test('.scripts()', async () => {
     await closeServer(server);
 
     expect(client.hashes.js).toEqual(
-        'ba74ef6a7e756dd1f55a205da347c20df59a0aef7b9a28b7512fd1ce64fe7ba9'
+        '32bea7be4d163b02785e82b12d1c5f7710b10f063ca19ffe1b722ca7224b124e'
     );
 
     expect(fallbackScripts[0]).toMatch(
-        '/bundle/ba74ef6a7e756dd1f55a205da347c20df59a0aef7b9a28b7512fd1ce64fe7ba9.js'
+        '/bundle/32bea7be4d163b02785e82b12d1c5f7710b10f063ca19ffe1b722ca7224b124e.js'
     );
 
     expect(client.scripts([published.js])[0]).toMatch(
-        '/bundle/8c11af93300a6bde836b5ce1f306422602bbb53873598435e38026e1f0422649.js'
+        '/bundle/9cef8d745b697dacd6e298b47fb63bb4369942581f7cde24e66e43efab15fd2b.js'
     );
 }, 30000);
 
