@@ -823,8 +823,8 @@ test('sync() - called when publicFeedUrl already cached but not publicBundleUrl'
     await closeServer(server);
 });
 
-test('metrics - sync() endpoint', async done => {
-    expect.assertions(2);
+test('metrics - sync() endpoint', async () => {
+    expect.assertions(4);
     const { server, port } = await createTestServer([
         {
             verb: 'get',
@@ -836,18 +836,13 @@ test('metrics - sync() endpoint', async done => {
 
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
-    const metrics = [];
-    client.metrics.on('data', metric => metrics.push(metric));
-
-    client.metrics.on('end', () => {
-        expect(metrics).toHaveLength(1);
-        expect(metrics[0].name).toBe('asset_server_sync_timer');
-        done();
-    });
+    expect(client.publicFeedUrl).toEqual(null);
+    expect(client.publicBundleUrl).toEqual(null);
 
     await client.sync();
 
-    client.metrics.push(null);
+    expect(client.publicFeedUrl).toEqual('b');
+    expect(client.publicBundleUrl).toEqual('a');
 
     await closeServer(server);
 });
