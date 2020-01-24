@@ -75,7 +75,7 @@
   "scripts": {
     "lint:format": "eslint --fix .",
     "lint": "eslint .",
-    "test": "jest",
+    "test": "jest --coverage --forceExit",
     "precommit": "lint-staged",
     "cm": "git-cz",
     "readme": "projectz compile",
