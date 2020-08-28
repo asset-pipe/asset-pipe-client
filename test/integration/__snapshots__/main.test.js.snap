@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`publishAssets(tag, files, options) - 500 error 1`] = `[Error: Asset build server responded with an error. Original message: Server error. Status code: 500]`;
+exports[`publishAssets(tag, files, options) - 500 error 1`] = `[Error: Asset build server responded with an error. Original message: Server error. Status code: 500. URL: http://127.0.0.1:57336/publish-assets?rebundle=true]`;
 
 exports[`publishAssets(tag, files, options) - css 1`] = `
 Object {
