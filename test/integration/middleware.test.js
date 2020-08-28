@@ -8,7 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { resolve } = require('path');
 const request = require('supertest');
-const Client = require('../../');
+const Client = require("../..");
 
 function closeServer(server) {
     return new Promise(resolve => {

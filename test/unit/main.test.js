@@ -3,7 +3,7 @@
 
 'use strict';
 
-let Client = require('../../');
+let Client = require("../..");
 
 const buildServerUri = 'http://server.com:3000';
 
@@ -142,7 +142,7 @@ test('uploadFeed(files) - request error', async () => {
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
     jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
-    Client = require('../../');
+    Client = require("../..");
     const fakeFiles = ['first.js'];
     const fakeOptions = {};
     const client = new Client({ buildServerUri });
@@ -157,7 +157,7 @@ test('createRemoteBundle(sources) - request error', async () => {
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
     jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
-    Client = require('../../');
+    Client = require("../..");
     const fakeSources = ['a12das3d.json', '12da321fd.json'];
     const client = new Client({ buildServerUri });
 
@@ -262,7 +262,7 @@ test('publishAssets(tag, entrypoints) - request error', async () => {
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
     jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
-    Client = require('../../');
+    Client = require("../..");
     const client = new Client({ buildServerUri });
 
     const result = client.publishAssets('podlet', ['first.js'], {});
@@ -275,7 +275,7 @@ test('publishInstructions(tag, type, data) - request error', async () => {
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('Fake error!')));
     jest.doMock('@asset-pipe/js-writer', () => createJsWriterMock());
-    Client = require('../../');
+    Client = require("../..");
 
     const client = new Client({ buildServerUri });
     const result = client.publishInstructions('layout', 'js', [
@@ -392,7 +392,7 @@ test('bundlingComplete(hashes, options) - empty hashes array returns true', asyn
     expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(null, { statusCode: 200 }));
-    Client = require('../../');
+    Client = require("../..");
     const client = new Client({ buildServerUri });
     const isComplete = await client.bundlingComplete([]);
     expect(isComplete).toBe(true);
@@ -402,7 +402,7 @@ test('bundlingComplete(hashes, options) - bundle does not exist returns false', 
     expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(null, { statusCode: 404 }));
-    Client = require('../../');
+    Client = require("../..");
     const client = new Client({ buildServerUri });
     const isComplete = await client.bundlingComplete(['a12sd2s1a1a1323a']);
     expect(isComplete).toBe(false);
@@ -412,7 +412,7 @@ test('bundlingComplete(hashes, options) - request throws', async () => {
     expect.assertions(1);
     jest.resetModules();
     jest.doMock('request', () => createRequestMock(new Error('fake error')));
-    Client = require('../../');
+    Client = require("../..");
     const client = new Client({ buildServerUri });
     await expect(client.bundlingComplete(['a12sd2s1a1a1323a'])).rejects.toEqual(
         new Error('fake error')

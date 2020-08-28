@@ -5,7 +5,7 @@
 const express = require('express');
 const { resolve } = require('path');
 const AssetPipeServer = require('@asset-pipe/server');
-const Client = require('../../');
+const Client = require("../..");
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

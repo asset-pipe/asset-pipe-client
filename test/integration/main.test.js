@@ -59,7 +59,7 @@ jest.mock('@asset-pipe/css-writer', () => {
     return jest.fn(() => cssWriter);
 });
 
-const Client = require('../../');
+const Client = require("../..");
 
 function createTestServer(handlers) {
     const server = express();
