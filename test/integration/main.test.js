@@ -416,9 +416,12 @@ test('publishAssets(tag, files, options) - 500 error', async () => {
     ]);
     const client = new Client({ buildServerUri: `http://127.0.0.1:${port}` });
 
-    const result = client.publishAssets('podlet1', ['first.js', 'second.js']);
-
-    await expect(result).rejects.toMatchSnapshot();
+    
+    try {
+        await client.publishAssets('podlet1', ['first.js', 'second.js']);
+    } catch(err) {
+        expect(String(err).replace(/:[0-9]+\//, '')).toMatchSnapshot();
+    }
     await closeServer(server);
 });
 
