@@ -47,7 +47,7 @@
     "commander": "^4.1.0",
     "is-stream": "^2.0.0",
     "joi": "^14.3.1",
-    "ow": "^0.15.0",
+    "ow": "^0.16.0",
     "request": "^2.88.0"
   },
   "devDependencies": {
