@@ -38,6 +38,11 @@ test('file schema allows for absolute file paths', () => {
     expect(result.error).toEqual(null);
 });
 
+test('file schema allows for email address in path', () => {
+    const result = Joi.validate('/path/test@test.com/index.js', schemas.file);
+    expect(result.error).toEqual(null);
+});
+
 test('hash schema', () => {
     const hash = 'a1b2c3a1b2c3';
     const result = Joi.validate(hash, schemas.hash);
